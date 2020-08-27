@@ -16,12 +16,12 @@ MonoBehaviour:
   m_GuidHigh: 13885039126196617150
   m_Images:
   - m_SerializedGuid:
-      m_GuidLow: 4928759899526801689
-      m_GuidHigh: 14778108701577279146
+      m_GuidLow: 5703456650425817600
+      m_GuidHigh: 8324404294732160957
     m_SerializedTextureGuid:
-      m_GuidLow: 4961663041289916996
-      m_GuidHigh: 17312431676261789320
-    m_Size: {x: 0.086, y: 0.053975664}
+      m_GuidLow: 4934691855526271590
+      m_GuidHigh: 13559659291513915305
+    m_Size: {x: 0.12, y: 0.06}
     m_SpecifySize: 1
-    m_Name: studentid
+    m_Name: ar_marker
     m_Texture: {fileID: 0}
