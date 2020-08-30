@@ -6,6 +6,9 @@ using UnityEngine.XR.ARSubsystems;
 
 public class SceneRoot : MonoBehaviour
 {
+
+    public GameEvent OnSceneRootSet;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +22,11 @@ public class SceneRoot : MonoBehaviour
         imageManger.enabled = false;
         ARTrackedObjectManager objectManger = origin.GetComponent<ARTrackedObjectManager>();
         objectManger.enabled = false;
+
+        if (OnSceneRootSet != null) {
+            OnSceneRootSet.Raise();
+        }
+
     }
 
     // Update is called once per frame
