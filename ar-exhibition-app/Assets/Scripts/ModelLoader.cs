@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 using Siccity.GLTFUtility;
 
 public class ModelLoader : MonoBehaviour
@@ -11,14 +12,12 @@ public class ModelLoader : MonoBehaviour
     GameObject wrapper;
     string filePath;
 
+    [SerializeField] float modelDimension = 3f;
+
     // Start is called before the first frame update
     void Start()
     {
         filePath = $"{Application.persistentDataPath}/Files/";
-        wrapper = new GameObject
-        {
-            name = "Model"
-        };
     }
 
     public void DownloadFile(string url)
@@ -54,9 +53,28 @@ public class ModelLoader : MonoBehaviour
 
     void LoadModel(string path)
     {
-        ResetWrapper();
+        CreateWrapper();
         GameObject model = Importer.LoadFromFile(path);
         model.transform.SetParent(wrapper.transform);
+        
+        Resize(wrapper);
+    }
+
+    void CreateWrapper()
+    {
+        wrapper = new GameObject
+        {
+            name = "Model"
+        };
+    }
+
+    void Resize(GameObject model)
+    {
+        MeshRenderer renderer = model.GetComponentInChildren<MeshRenderer>();
+
+        float max = Mathf.Max(Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y), renderer.bounds.size.z);
+        float scalingFactor = max * modelDimension;
+        model.transform.localScale *= scalingFactor;
     }
 
     IEnumerator GetFileRequest(string url, Action<UnityWebRequest> callback)
@@ -69,6 +87,7 @@ public class ModelLoader : MonoBehaviour
         }
     }
 
+    // Not needed right now
     void ResetWrapper()
     {
         if (wrapper != null)
