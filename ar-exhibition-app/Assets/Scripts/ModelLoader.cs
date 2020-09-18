@@ -68,6 +68,13 @@ public class ModelLoader : MonoBehaviour
         string[] pieces = url.Split('/');
         string fileName = pieces[pieces.Length - 1];
 
+        if (fileName.Contains("?raw=true"))
+        {
+            string[] fileNamePieces = fileName.Split('?');
+            fileName = fileNamePieces[0];
+        }
+            
+
         return $"{filePath}{fileName}";
     }
 
@@ -117,8 +124,8 @@ public class ModelLoader : MonoBehaviour
         MeshRenderer renderer = model.GetComponentInChildren<MeshRenderer>();
 
         float max = Mathf.Max(Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y), renderer.bounds.size.z);
-        float scalingFactor = modelDimension / max;
-        model.transform.localScale *= scalingFactor;
+        float scalingFactor = max / modelDimension;
+        model.transform.localScale /= scalingFactor;       
     }
 
     IEnumerator GetImageRequest(string url, System.Action<Sprite> callback)
