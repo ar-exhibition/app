@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ToggleUI : MonoBehaviour
 {
@@ -14,8 +16,15 @@ public class ToggleUI : MonoBehaviour
         else
         {
             StartCoroutine(LerpToScale(container.transform, new Vector3(1, 1, 1), 0.2f));
-            StartCoroutine(LerpToPos(this.transform, new Vector3(385f, 0f, 0f), 0.2f));
+            StartCoroutine(LerpToPos(this.transform, new Vector3(398f, 0f, 0f), 0.2f));
         }
+    }
+
+    public void ChangeButtonName()
+    {
+        GameObject clickedButton = EventSystem.current.currentSelectedGameObject;
+        if (clickedButton.name == "SearchButton")
+            clickedButton.transform.GetComponentInChildren<Text>().text = "Refresh";
     }
 
     public IEnumerator LerpToPos(Transform transform, Vector3 position, float timeToMove)
