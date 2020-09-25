@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 public class ToggleUI : MonoBehaviour
 {
@@ -11,12 +12,12 @@ public class ToggleUI : MonoBehaviour
         if (container.activeInHierarchy)
         {
             StartCoroutine(LerpToScale(container.transform, new Vector3(0, 1, 1), 0.1f));
-            StartCoroutine(LerpToPos(this.transform, Vector3.zero, 0.1f));           
+            StartCoroutine(LerpAnchor(this.transform.parent, Vector2.zero, 0.1f));           
         }
         else
         {
             StartCoroutine(LerpToScale(container.transform, new Vector3(1, 1, 1), 0.2f));
-            StartCoroutine(LerpToPos(this.transform, new Vector3(398f, 0f, 0f), 0.2f));
+            StartCoroutine(LerpAnchor(this.transform.parent, new Vector2(0.4f, 0f), 0.2f));
         }
     }
 
@@ -24,9 +25,22 @@ public class ToggleUI : MonoBehaviour
     {
         GameObject clickedButton = EventSystem.current.currentSelectedGameObject;
         if (clickedButton.name == "SearchButton")
-            clickedButton.transform.GetComponentInChildren<Text>().text = "Refresh";
+            clickedButton.transform.GetComponentInChildren<TMP_Text>().text = "Refresh";
     }
 
+    public IEnumerator LerpAnchor(Transform transform, Vector2 anchorValues, float timeToMove)
+    {
+        var currentAnchorPos = transform.GetComponent<RectTransform>().anchorMin;
+        var t = 0f;
+        while (t < 1)
+        {
+            t += Time.deltaTime / timeToMove;
+            transform.GetComponent<RectTransform>().anchorMin = Vector3.Lerp(currentAnchorPos, anchorValues, t);
+            yield return null;
+        }
+        GameObject.Find("MinimizeImage").GetComponent<RectTransform>().Rotate(0, 0, 180f);
+    }
+    /*
     public IEnumerator LerpToPos(Transform transform, Vector3 position, float timeToMove)
     {
         var currentPos = transform.GetComponent<RectTransform>().anchoredPosition;
@@ -39,7 +53,7 @@ public class ToggleUI : MonoBehaviour
         }
         transform.GetChild(0).GetComponent<RectTransform>().Rotate(0, 0, 180f);
     }
-
+    */
     public IEnumerator LerpToScale(Transform transform, Vector3 scale, float timeToMove)
     {
         bool scaled = false;

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
 using Siccity.GLTFUtility;
+using UnityEngine.UI;
 
 public class ModelLoader : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class ModelLoader : MonoBehaviour
 
     [SerializeField] float modelDimension = 3f;
     [SerializeField] float imageDimension = 3f;
+
+    [SerializeField] GameObject progressSlider;
 
     // Start is called before the first frame update
     void Start()
@@ -35,16 +38,9 @@ public class ModelLoader : MonoBehaviour
             return;
         }
 
-        StartCoroutine(GetFileRequest(url, (UnityWebRequest req) =>
+        StartCoroutine(GetFileRequest(url, (req) =>
         {
-            if (req.isNetworkError || req.isHttpError)
-            {
-                Debug.Log($"{req.error} : {req.downloadHandler.text}");
-            }
-            else
-            {
-                LoadModel(path);
-            }
+            LoadModel(path);
         }));
     }
 
@@ -156,20 +152,21 @@ public class ModelLoader : MonoBehaviour
         using (UnityWebRequest req = UnityWebRequest.Get(url))
         {
             req.downloadHandler = new DownloadHandlerFile(GetFilePath(url));
-            yield return req.SendWebRequest();
-            callback(req);
-        }
-    }
+            req.SendWebRequest();
 
-    // Not needed right now
-    void ResetWrapper()
-    {
-        if (wrapper != null)
-        {
-            foreach (Transform trans in wrapper.transform)
+            if (req.isNetworkError || req.isHttpError)
             {
-                Destroy(trans.gameObject);
+                Debug.Log($"{req.error} : {req.downloadHandler.text}");
             }
+
+            progressSlider.SetActive(true);
+            while (!req.isDone)
+            {
+                progressSlider.GetComponent<Slider>().value = req.downloadProgress;
+                yield return null;
+            }
+            progressSlider.SetActive(false);
+            callback(req);
         }
     }
 }

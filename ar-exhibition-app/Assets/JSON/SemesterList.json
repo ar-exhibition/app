@@ -1,0 +1,15 @@
+{
+  "semesters": [
+    {"name": "WS1516"},
+    {"name": "SS16"},
+    {"name": "WS1617"},
+    {"name": "SS17"},
+    {"name": "WS1718"},
+    {"name": "SS18"},
+    {"name": "WS1819"},
+    {"name": "SS19"},
+    {"name": "WS1920"},
+    {"name": "SS20"},
+    {"name": "WS2021"}
+  ]
+}
