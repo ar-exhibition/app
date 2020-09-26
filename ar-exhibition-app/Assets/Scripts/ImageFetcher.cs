@@ -1,16 +1,12 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
-using Newtonsoft.Json;
-using Siccity.GLTFUtility;
 
-public class ModelFetcher : MonoBehaviour
+public class ImageFetcher : MonoBehaviour
 {
-    
     public string Url;
+    public GameObject[] ImageHolders;
 
     [Header("Debug")]
     public bool SkipCache = false;
@@ -34,7 +30,7 @@ public class ModelFetcher : MonoBehaviour
 
         FileDownloader.DownloadFile(url, SkipCache, (path) => {
             _progressIndicator.gameObject.SetActive(false);
-            LoadModel(path);
+            LoadImage(path);
         }, (progress) => {
             _progressIndicator.progress = progress;
         }, (error) => {
@@ -42,12 +38,21 @@ public class ModelFetcher : MonoBehaviour
         });
     }
 
-    void LoadModel(string path)
+    void LoadImage(string path)
     {
-        GameObject model = Importer.LoadFromFile(path);
-        Resize(model);
-        model.transform.SetParent(gameObject.transform);
-        model.transform.localPosition = Vector3.zero;
+        byte[] fileData = File.ReadAllBytes(path);
+        Texture2D tex = new Texture2D(2, 2);
+        tex.LoadImage(fileData);
+        
+        float widthScaleFactor = tex.width / (float) tex.height; 
+
+        foreach (GameObject imageHolder in ImageHolders)
+        {
+            imageHolder.transform.localScale = new Vector3(widthScaleFactor, 1.0f, 1.0f);
+            imageHolder.GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
+            imageHolder.SetActive(true);
+        }
+        Resize(ImageHolders[0]);
 
     }
 
@@ -57,9 +62,7 @@ public class ModelFetcher : MonoBehaviour
         if (renderer != null) {
             float max = Mathf.Max(Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y), renderer.bounds.size.z);
             float scalingFactor = max / maxDimension;
-            model.transform.localScale /= scalingFactor;    
+            model.transform.parent.localScale /= scalingFactor;    
         }   
     }
-
-
 }
