@@ -12,6 +12,8 @@ public class AnchorCreator : MonoBehaviour
 
     public GameObject PlacementIndicator;
 
+    private Vector3 _hitPosition;
+
     public void RemoveAllAnchors()
     {
         foreach (var anchor in m_Anchors)
@@ -33,7 +35,7 @@ public class AnchorCreator : MonoBehaviour
         Vector2 screenCenter = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
         if (m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneEstimated)) {
             Pose hitPose = s_Hits[0].pose;
-            PlacementIndicator.transform.position = hitPose.position;
+            _hitPosition = hitPose.position;
             PlacementIndicator.transform.rotation = hitPose.rotation;
             PlacementIndicator.SetActive(true);
             if (Input.touchCount > 0) {
@@ -49,6 +51,10 @@ public class AnchorCreator : MonoBehaviour
             }
         } else {
             PlacementIndicator.SetActive(false);
+        }
+
+        if (PlacementIndicator.activeInHierarchy) {
+            PlacementIndicator.transform.position = Vector3.Lerp(PlacementIndicator.transform.position, _hitPosition, Time.deltaTime * 5f);
         }
 
     }
