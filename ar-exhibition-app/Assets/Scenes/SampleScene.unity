@@ -1003,11 +1003,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlaceIndicator
       objectReference: {fileID: 0}
-    - target: {fileID: 8812432775566354290, guid: ac36f5b4c23e74ae880f5e4bdafe4014,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.001
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac36f5b4c23e74ae880f5e4bdafe4014, type: 3}
 --- !u!1 &1685373692 stripped
