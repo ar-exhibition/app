@@ -1,0 +1,60 @@
+{
+    "assets": {
+        "0001": {
+            "creator": {
+                "name": "Vincent Schnoor",
+                "studies": "Digital Reality"
+            },
+            "course": {
+                "name": "VFX",
+                "term": "WS1920"
+            },
+            "name": "Hogwarts Express",
+            "link": "https://github.com/TheCanadians/DownloadTest/blob/master/HogwartsExpressExport7.glb?raw=true",
+            "thumbnail": "https://github.com/TheCanadians/Thumbnail",
+            "assetType": "3D"
+        },
+        "0002": {
+            "creator": {
+                "name": "Vincent Schnoor",
+                "studies": "Digital Reality"
+            },
+            "course": {
+                "name": "VFX",
+                "term": "WS1920"
+            },
+            "name": "Hogwarts Express Video",
+            "link": "https://github.com/TheCanadians/DownloadTest/blob/master/HogwartsExpressExport7.glb?raw=true",
+            "thumbnail": "https://github.com/TheCanadians/Thumbnail",
+            "assetType": "Video"
+        },
+        "0003": {
+            "assetType": "light",
+            "light": {
+                "type": "point",
+                "power": "200",
+                "color": "#efefef"
+            }
+        }
+    },
+    "anchors": {
+        "001": {
+            "assetID": "0002",
+            "scale": 0.8
+        },
+        "002": {
+            "assetID": "0002",
+            "scale": 0.8
+        }
+    },
+    "scenes": {
+        "001": {
+            "name": "Scene 1",
+            "worldMapLink": "https://xrchitectue.de/scenefile",
+            "marker": {
+                "name": "marker1",
+                "link": "https://xrchitectue.de/marker"
+            }
+        }
+    }
+}
