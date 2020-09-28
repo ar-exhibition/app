@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c51179a65428446482463c57f957463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Url: https://github.com/TheCanadians/DownloadTest/blob/master/HogwartsExpressExport7.glb?raw=true
-  SkipCache: 1
+  Url: https://www.dropbox.com/s/ia1etir2p7p7myj/randy_simple.glb?dl=1
+  SkipCache: 0
   LoadOnStart: 1
 --- !u!1001 &9078913826799680614
 PrefabInstance:

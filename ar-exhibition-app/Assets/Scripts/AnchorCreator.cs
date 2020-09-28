@@ -28,6 +28,7 @@ public class AnchorCreator : MonoBehaviour
         m_RaycastManager = GetComponent<ARRaycastManager>();
         m_AnchorManager = GetComponent<ARAnchorManager>();
         m_Anchors = new List<ARAnchor>();
+        PlacementIndicator.SetActive(false);
     }
 
     void Update()
@@ -57,6 +58,10 @@ public class AnchorCreator : MonoBehaviour
             PlacementIndicator.transform.position = Vector3.Lerp(PlacementIndicator.transform.position, _hitPosition, Time.deltaTime * 5f);
         }
 
+    }
+
+    void OnDisable() {
+        PlacementIndicator.SetActive(false);
     }
 
     static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
