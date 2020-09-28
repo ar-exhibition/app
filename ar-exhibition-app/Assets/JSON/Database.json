@@ -1,6 +1,7 @@
 {
-    "assets": {
-        "0001": {
+    "assets": [
+        {
+            "assetId": "0001",
             "creator": {
                 "name": "Vincent Schnoor",
                 "studies": "Digital Reality"
@@ -14,7 +15,8 @@
             "thumbnail": "https://github.com/TheCanadians/Thumbnail",
             "assetType": "3D"
         },
-        "0002": {
+        {
+            "assetId": "0002",
             "creator": {
                 "name": "Vincent Schnoor",
                 "studies": "Digital Reality"
@@ -28,7 +30,8 @@
             "thumbnail": "https://github.com/TheCanadians/Thumbnail",
             "assetType": "Video"
         },
-        "0003": {
+        {
+            "assetId": "0003",
             "assetType": "light",
             "light": {
                 "type": "point",
@@ -36,19 +39,22 @@
                 "color": "#efefef"
             }
         }
-    },
-    "anchors": {
-        "001": {
+    ],
+    "anchors": [
+        {
+            "anchorId": "001",
             "assetID": "0002",
             "scale": 0.8
         },
-        "002": {
+        {
+            "anchorId": "002",
             "assetID": "0002",
             "scale": 0.8
         }
-    },
-    "scenes": {
-        "001": {
+    ],
+    "scenes": [
+        {
+            "sceneId": "001",
             "name": "Scene 1",
             "worldMapLink": "https://xrchitectue.de/scenefile",
             "marker": {
@@ -56,5 +62,5 @@
                 "link": "https://xrchitectue.de/marker"
             }
         }
-    }
+    ]
 }
