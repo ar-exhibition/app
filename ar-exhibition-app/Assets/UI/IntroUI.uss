@@ -1,0 +1,38 @@
+.introContainer {
+    width: 100%;
+    height: 100%;
+    background-image: url('/Assets/Sprites/Background.png');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.startExhibitionButton {
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    color: rgb(255, 255, 255);
+    font-size: 64px;
+    position: absolute;
+    left: 80px;
+    bottom: 120px;
+    -unity-font: url('/Assets/Fonts/SF-Pro-Display-Bold.otf');
+}
+
+.createExhibitionButton {
+    font-size: 26px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(255, 255, 255);
+    position: absolute;
+    bottom: 50px;
+    right: 80px;
+    -unity-font: url('/Assets/Fonts/SF-Pro-Display-Bold.otf');
+}
+
+.startExhibitionButton:active, .createExhibitionButton:active {
+    color: rgb(200, 200, 200);
+}

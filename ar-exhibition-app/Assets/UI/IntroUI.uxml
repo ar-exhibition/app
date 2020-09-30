@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="introContainer" class="introContainer">
+        <Style src="IntroUI.uss" />
+        <ui:Button text="Enter Exhibition" display-tooltip-when-elided="True" name="startExhibitionButton" class="startExhibitionButton" />
+        <ui:Button text="Create Exhibition" display-tooltip-when-elided="True" name="createExhibitionButton" class="createExhibitionButton" />
+    </ui:VisualElement>
+</ui:UXML>
