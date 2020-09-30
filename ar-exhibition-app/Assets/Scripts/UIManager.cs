@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     public VisualTreeAsset AssetItem;
 
     public GameEvent AddButtonClicked;
+    public GameEvent CheckButtonClicked;
+    public GameEvent AssetSelected;
 
     private Database _database;
 
@@ -18,10 +20,13 @@ public class UIManager : MonoBehaviour
 
     private VisualElement _root;
     private Button _addButton;
+    private Button _checkButton;
     private VisualElement _sideMenuContainer;
     private ListView _assetListView;
+    private VisualElement _selectedAssetContainer;
 
     private AssetData[] _assets;
+    private AssetData _selectedAsset;
 
     // Start is called before the first frame update
     void Awake()
@@ -30,8 +35,10 @@ public class UIManager : MonoBehaviour
         _UIDocument = GetComponent<UIDocument>();
         _root = _UIDocument.rootVisualElement;
         _addButton = _root.Q<Button>("addButton");
+        _checkButton = _root.Q<Button>("checkButton");
         _sideMenuContainer = _root.Q<VisualElement>("sideMenuContainer");
         _assetListView = _root.Q<ListView>("assetList");
+        _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -41,14 +48,21 @@ public class UIManager : MonoBehaviour
 
     void OnEnable() {
         _addButton.clicked += OnAddButtonClicked;
+        _checkButton.clicked += OnCheckButtonClicked;
     }
     void OnDisable() {
         _addButton.clicked -= OnAddButtonClicked;
+        _checkButton.clicked -= OnCheckButtonClicked;
     }
 
     void OnAddButtonClicked() {
         if (AddButtonClicked != null) {
             AddButtonClicked.Raise();
+        }
+    }
+    void OnCheckButtonClicked() {
+        if (CheckButtonClicked != null) {
+            CheckButtonClicked.Raise();
         }
     }
 
@@ -74,6 +88,23 @@ public class UIManager : MonoBehaviour
         StartCoroutine(SlideMenuAnimation(-550f, 0.4f));
     }
 
+    public void EnterPlacementMode() {
+        SlideOutMenu();
+        _addButton.style.display = DisplayStyle.None;
+        _checkButton.style.display = DisplayStyle.Flex;
+        if (_selectedAsset != null) {
+            _selectedAssetContainer.style.display = DisplayStyle.Flex;
+            _selectedAssetContainer.Q<Label>("selectedCreator").text = _selectedAsset.creator.name;
+            _selectedAssetContainer.Q<Label>("selectedName").text = _selectedAsset.name;
+        }
+    }
+    public void ExitPlacementMode() {
+        // SlideOutMenu();
+        _addButton.style.display = DisplayStyle.Flex;
+        _checkButton.style.display = DisplayStyle.None;
+        _selectedAssetContainer.style.display = DisplayStyle.None;
+    }
+
     private void AssetListSetup() {
 
         if (_assetListView.makeItem == null)
@@ -85,7 +116,11 @@ public class UIManager : MonoBehaviour
             object[] arr = e.ToArray<object>();
             if (arr.Length > 0) {
                 AssetData asset = arr[0] as AssetData;
-                Debug.Log(asset.creator.name);
+                _selectedAsset = asset;
+                EnterPlacementMode();
+                if (AssetSelected != null) {
+                    AssetSelected.Raise();
+                }
             }
         };
 

@@ -39,17 +39,6 @@ public class AnchorCreator : MonoBehaviour
             _hitPosition = hitPose.position;
             PlacementIndicator.transform.rotation = hitPose.rotation;
             PlacementIndicator.SetActive(true);
-            if (Input.touchCount > 0) {
-                Touch touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Began) {
-                    var anchor = m_AnchorManager.AddAnchor(hitPose);
-                    if (anchor == null) {
-                        Debug.Log("Error creating anchor");
-                    } else {
-                        m_Anchors.Add(anchor);
-                    }
-                }
-            }
         } else {
             PlacementIndicator.SetActive(false);
         }
@@ -58,6 +47,19 @@ public class AnchorCreator : MonoBehaviour
             PlacementIndicator.transform.position = Vector3.Lerp(PlacementIndicator.transform.position, _hitPosition, Time.deltaTime * 5f);
         }
 
+    }
+
+    public void PlaceAnchor() {
+        Vector2 screenCenter = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
+        if (m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneEstimated)) {
+            Pose hitPose = s_Hits[0].pose;
+            var anchor = m_AnchorManager.AddAnchor(hitPose);
+            if (anchor == null) {
+                Debug.Log("Error creating anchor");
+            } else {
+                m_Anchors.Add(anchor);
+            }
+        }
     }
 
     void OnDisable() {
