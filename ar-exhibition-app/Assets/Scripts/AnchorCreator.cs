@@ -13,6 +13,7 @@ public class AnchorCreator : MonoBehaviour
     public GameObject PlacementIndicator;
 
     private Vector3 _hitPosition;
+    private UIManager _uiManager;
 
     public void RemoveAllAnchors()
     {
@@ -29,6 +30,10 @@ public class AnchorCreator : MonoBehaviour
         m_AnchorManager = GetComponent<ARAnchorManager>();
         m_Anchors = new List<ARAnchor>();
         PlacementIndicator.SetActive(false);
+    }
+
+    void Start() {
+        _uiManager = FindObjectOfType<UIManager>();
     }
 
     void Update()
@@ -50,14 +55,17 @@ public class AnchorCreator : MonoBehaviour
     }
 
     public void PlaceAnchor() {
-        Vector2 screenCenter = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
-        if (m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneEstimated)) {
-            Pose hitPose = s_Hits[0].pose;
-            var anchor = m_AnchorManager.AddAnchor(hitPose);
-            if (anchor == null) {
-                Debug.Log("Error creating anchor");
-            } else {
-                m_Anchors.Add(anchor);
+        if (_uiManager.SelectedAsset != null) {
+            Vector2 screenCenter = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
+            if (m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneEstimated)) {
+                Pose hitPose = s_Hits[0].pose;
+                var anchor = m_AnchorManager.AddAnchor(hitPose);
+                if (anchor == null) {
+                    Debug.Log("Error creating anchor");
+                } else {
+                    anchor.GetComponent<AnchorAsset>().LoadAsset(_uiManager.SelectedAsset);
+                    m_Anchors.Add(anchor);
+                }
             }
         }
     }

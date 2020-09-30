@@ -29,7 +29,8 @@ public class UIManager : MonoBehaviour
     private Button _saveSceneButton;
 
     private AssetData[] _assets;
-    private AssetData _selectedAsset;
+    [HideInInspector]
+    public AssetData SelectedAsset;
 
     // Start is called before the first frame update
     void Awake()
@@ -104,11 +105,11 @@ public class UIManager : MonoBehaviour
         SlideOutMenu();
         _addButton.style.display = DisplayStyle.None;
         _checkButton.style.display = DisplayStyle.Flex;
-        _sceneBar.style.display = DisplayStyle.None;
-        if (_selectedAsset != null) {
+        _root.AddToClassList("placementActive");
+        if (SelectedAsset != null) {
             _selectedAssetContainer.style.display = DisplayStyle.Flex;
-            _selectedAssetContainer.Q<Label>("selectedCreator").text = _selectedAsset.creator.name;
-            _selectedAssetContainer.Q<Label>("selectedName").text = _selectedAsset.name;
+            _selectedAssetContainer.Q<Label>("selectedCreator").text = SelectedAsset.creator.name;
+            _selectedAssetContainer.Q<Label>("selectedName").text = SelectedAsset.name;
         }
     }
     public void ExitPlacementMode() {
@@ -116,7 +117,7 @@ public class UIManager : MonoBehaviour
         _addButton.style.display = DisplayStyle.Flex;
         _checkButton.style.display = DisplayStyle.None;
         _selectedAssetContainer.style.display = DisplayStyle.None;
-        _sceneBar.style.display = DisplayStyle.Flex;
+        _root.RemoveFromClassList("placementActive");
     }
 
     private void AssetListSetup() {
@@ -130,7 +131,7 @@ public class UIManager : MonoBehaviour
             object[] arr = e.ToArray<object>();
             if (arr.Length > 0) {
                 AssetData asset = arr[0] as AssetData;
-                _selectedAsset = asset;
+                SelectedAsset = asset;
                 EnterPlacementMode();
                 if (AssetSelected != null) {
                     AssetSelected.Raise();

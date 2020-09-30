@@ -760,6 +760,22 @@ MonoBehaviour:
   AddButtonClicked: {fileID: 11400000, guid: 3aef04317570a404e9938680384c34b7, type: 2}
   CheckButtonClicked: {fileID: 11400000, guid: 4993f7b9959c9472daa3dab49e0e9d83, type: 2}
   AssetSelected: {fileID: 11400000, guid: 8c149f65d66b84752bdf3ed948c571b4, type: 2}
+  SaveSceneButtonClicked: {fileID: 0}
+  SelectedAsset:
+    assetId: 0
+    creator:
+      name: 
+      studies: 
+    course:
+      name: 
+      term: 
+    name: 
+    link: 
+    thumbnail: 
+    assetType: 
+    type: 
+    power: 
+    color: 
   easingInOutCurve:
     serializedVersion: 2
     m_Curve:
@@ -1117,7 +1133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 9078913824957898869, guid: b69d2290973e24566bb89b3d5016a2c9,
+  m_AnchorPrefab: {fileID: 1425031600425799432, guid: 50c133fd8fa6e408495852ba3d04f7cc,
     type: 3}
 --- !u!114 &888480549
 MonoBehaviour:

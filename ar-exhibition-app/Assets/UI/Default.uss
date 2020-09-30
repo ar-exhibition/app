@@ -195,3 +195,7 @@
 .menuActive #sceneBar {
     display: none;
 }
+
+.placementActive #sceneBar {
+    display: none;
+}
