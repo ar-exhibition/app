@@ -84,5 +84,5 @@
 }
 
 .menuActive #addButtonBg {
-    background-image: url('/Assets/Sprites/x_button_blue.png');
+    background-image: url('/Assets/Sprites/x_button_gray.png');
 }
