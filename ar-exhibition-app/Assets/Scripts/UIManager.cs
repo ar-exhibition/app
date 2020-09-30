@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     private VisualElement _sideMenuContainer;
     private ListView _assetListView;
     private VisualElement _selectedAssetContainer;
+    private VisualElement _sceneBar;
 
     private AssetData[] _assets;
     private AssetData _selectedAsset;
@@ -39,6 +40,7 @@ public class UIManager : MonoBehaviour
         _sideMenuContainer = _root.Q<VisualElement>("sideMenuContainer");
         _assetListView = _root.Q<ListView>("assetList");
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
+        _sceneBar = _root.Q<VisualElement>("sceneBar");
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -92,6 +94,7 @@ public class UIManager : MonoBehaviour
         SlideOutMenu();
         _addButton.style.display = DisplayStyle.None;
         _checkButton.style.display = DisplayStyle.Flex;
+        _sceneBar.style.display = DisplayStyle.None;
         if (_selectedAsset != null) {
             _selectedAssetContainer.style.display = DisplayStyle.Flex;
             _selectedAssetContainer.Q<Label>("selectedCreator").text = _selectedAsset.creator.name;
@@ -103,6 +106,7 @@ public class UIManager : MonoBehaviour
         _addButton.style.display = DisplayStyle.Flex;
         _checkButton.style.display = DisplayStyle.None;
         _selectedAssetContainer.style.display = DisplayStyle.None;
+        _sceneBar.style.display = DisplayStyle.Flex;
     }
 
     private void AssetListSetup() {

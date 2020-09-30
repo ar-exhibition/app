@@ -17,5 +17,12 @@
             <ui:Label text="Vincent Schnoor" display-tooltip-when-elided="True" name="selectedCreator" class="selectedCreator" />
             <ui:Label text="Hogwarts Express" display-tooltip-when-elided="True" name="selectedName" class="selectedName" />
         </ui:VisualElement>
+        <ui:VisualElement name="sceneBar" class="sceneBar">
+            <ui:Label text="My Scene" display-tooltip-when-elided="True" name="sceneName" class="sceneName" />
+            <ui:VisualElement name="sceneBarButtonContainer" class="sceneBarButtonContainer">
+                <ui:Button text="Finish" display-tooltip-when-elided="True" name="saveSceneButton" class="saveSceneButton" />
+                <ui:Button text="Cancel" display-tooltip-when-elided="True" name="cancelSceneButton" class="saveSceneButton cancelSceneButton" />
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

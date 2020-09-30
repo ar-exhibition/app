@@ -145,3 +145,53 @@
     margin-right: 20px;
     -unity-font: url('/Assets/Fonts/SF-Pro-Display-Medium.otf');
 }
+
+.sceneBar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 70px;
+    background-color: rgba(0, 0, 0, 0.42);
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sceneName {
+    color: rgb(255, 255, 255);
+    height: auto;
+    font-size: 22px;
+    -unity-font: url('/Assets/Fonts/SF-Pro-Display-Medium.otf');
+}
+
+.sceneBarButtonContainer {
+    height: 80%;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.saveSceneButton {
+    font-size: 18px;
+    width: 160px;
+    background-color: rgb(0, 124, 245);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    color: rgb(255, 255, 255);
+    -unity-font: url('/Assets/Fonts/SF-Pro-Display-Medium.otf');
+}
+
+.cancelSceneButton {
+    background-color: rgb(248, 57, 46);
+    margin-left: 30px;
+}
+
+.menuActive #sceneBar {
+    display: none;
+}
