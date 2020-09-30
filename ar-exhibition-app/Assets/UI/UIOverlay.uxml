@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Button text="Button" display-tooltip-when-elided="True" name="settingsButton" style="border-top-left-radius: 50%; border-bottom-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; position: absolute; top: 3%; left: 94%; width: 100px; height: 100px;">
+        <Style src="buttonStyle.uss" />
+    </ui:Button>
+    <ui:Button text="+" display-tooltip-when-elided="True" name="overlayPlusButton" style="position: absolute; top: 45%; left: 94%; width: 100px; height: 100px; border-top-left-radius: 50%; border-bottom-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; font-size: 90px; -unity-text-align: lower-center; background-color: rgb(255, 255, 255); border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0;">
+        <Style src="buttonStyle.uss" />
+    </ui:Button>
+    <ui:VisualElement name="saveSceneContainer" style="height: 10%; top: 90%; flex-direction: row; justify-content: space-between; background-color: rgba(0, 0, 0, 0.2); padding-left: 3%; padding-right: 3%; align-items: center;">
+        <Style src="buttonStyle.uss" />
+        <ui:Label text="Scene Name" display-tooltip-when-elided="True" name="saveSceneLabel" style="font-size: 50%; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: bold;" />
+        <ui:VisualElement name="saveButtonContainer" style="flex-grow: 1; justify-content: flex-end; align-items: center; flex-direction: row;">
+            <ui:Button text="Save Scene" display-tooltip-when-elided="True" name="saveButton" class="button" style="margin-right: 26px;" />
+            <ui:Button text="Cancel" display-tooltip-when-elided="True" name="cancelButton" class="button" style="background-color: rgb(255, 20, 0);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
