@@ -1,7 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="root" style="flex-grow: 1; flex-direction: row-reverse; width: 100%; height: 100%; border-top-left-radius: 100%; border-bottom-left-radius: 100%; border-top-right-radius: 100%; border-bottom-right-radius: 100%; font-size: 64px;">
-        <ui:VisualElement name="rightCol" style="flex-grow: 0; width: 100px; right: auto; flex-wrap: nowrap; flex-direction: column; justify-content: center; align-items: center; padding-left: 0; padding-right: 20px;">
-            <ui:Button text="+" name="addButton" style="flex-grow: 0; border-top-left-radius: 100%; border-bottom-left-radius: 100%; border-top-right-radius: 100%; border-bottom-right-radius: 100%; width: 80px; height: 80px; font-size: 32px; flex-direction: row-reverse;" />
+    <ui:Template name="SideMenu" src="SideMenu.uxml" />
+    <ui:VisualElement name="root" class="root">
+        <Style src="Default.uss" />
+        <ui:VisualElement name="sideMenuContainer" class="sideMenuContainer">
+            <ui:Instance template="SideMenu" name="SideMenu" class="sideMenu" />
+        </ui:VisualElement>
+        <ui:VisualElement name="rightCol" class="rightCol">
+            <ui:Button name="addButton" class="addButton">
+                <ui:VisualElement name="addButtonBg" class="addButtonBg" />
+            </ui:Button>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

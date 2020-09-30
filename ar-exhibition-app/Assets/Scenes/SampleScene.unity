@@ -758,6 +758,7 @@ GameObject:
   - component: {fileID: 605871091}
   - component: {fileID: 605871090}
   - component: {fileID: 605871093}
+  - component: {fileID: 605871094}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -825,7 +826,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d2096669424f46f3892459bd7d6ab83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AssetItem: {fileID: 9197481963319205126, guid: c770627e8edc3452fbacc2eeee9f2fbd,
+    type: 3}
   AddButtonClicked: {fileID: 11400000, guid: 3aef04317570a404e9938680384c34b7, type: 2}
+  easingInOutCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &605871094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605871089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20061d5394155454f93663a60c8b8ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 3aef04317570a404e9938680384c34b7, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 605871093}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ToggleMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

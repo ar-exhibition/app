@@ -16,18 +16,28 @@ public class Database : MonoBehaviour
 
     void Start()
     {
-        PullData();
+        
     }
 
 
-    public async void PullData(Action onDone = null) {
-        string result = await Database.GetRequest(ContentRequestUrl);
-        _databaseData = JsonUtility.FromJson<DatabaseData>(result);
-        _assetDict = CreateAssetDict(_databaseData.assets);
-        _anchorDict = CreateAnchorDict(_databaseData.anchors);
-        if (onDone != null) {
-            onDone();
+    public async void GetData(bool forceReload, Action<DatabaseData> onDone = null) {
+        if (_databaseData == null || forceReload) {
+            string result = await Database.GetRequest(ContentRequestUrl);
+            _databaseData = JsonUtility.FromJson<DatabaseData>(result);
+            _assetDict = CreateAssetDict(_databaseData.assets);
+            _anchorDict = CreateAnchorDict(_databaseData.anchors);
         }
+        if (onDone != null) {
+            onDone(_databaseData);
+        }
+    }
+
+    public void GetData(Action<DatabaseData> onDone = null) {
+        GetData(false, (data) => {
+            if (onDone != null) {
+                onDone(data);
+            }
+        });
     }
 
     public bool TryGetAssetByAnchorId(string anchorId, out AssetData asset) {

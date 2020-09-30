@@ -1,0 +1,36 @@
+.sideMenuRoot {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    border-right-width: 1px;
+    border-left-color: rgb(212, 212, 212);
+    border-right-color: rgb(212, 212, 212);
+    border-top-color: rgb(212, 212, 212);
+    border-bottom-color: rgb(212, 212, 212);
+}
+
+.menuHeaderContainer {
+    height: 130px;
+    width: 100%;
+    background-color: rgb(241, 241, 241);
+}
+
+.menuHeaderLabel {
+    font-size: 34px;
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: 32px;
+    padding-bottom: 32px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    -unity-font: url('/Assets/Fonts/SF-Pro-Display-Medium.otf');
+}
+
+.sideMenuContent {
+    flex-grow: 1;
+}
+
+.assetList {
+    flex-grow: 1;
+}
