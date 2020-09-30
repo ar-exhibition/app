@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public GameEvent AddButtonClicked;
     public GameEvent CheckButtonClicked;
     public GameEvent AssetSelected;
+    public GameEvent SaveSceneButtonClicked;
 
     private Database _database;
 
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     private ListView _assetListView;
     private VisualElement _selectedAssetContainer;
     private VisualElement _sceneBar;
+    private Button _saveSceneButton;
 
     private AssetData[] _assets;
     private AssetData _selectedAsset;
@@ -41,6 +43,7 @@ public class UIManager : MonoBehaviour
         _assetListView = _root.Q<ListView>("assetList");
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
         _sceneBar = _root.Q<VisualElement>("sceneBar");
+        _saveSceneButton = _sceneBar.Q<Button>("saveSceneButton");
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -51,10 +54,12 @@ public class UIManager : MonoBehaviour
     void OnEnable() {
         _addButton.clicked += OnAddButtonClicked;
         _checkButton.clicked += OnCheckButtonClicked;
+        _saveSceneButton.clicked += OnSaveSceneButtonClicked;
     }
     void OnDisable() {
         _addButton.clicked -= OnAddButtonClicked;
         _checkButton.clicked -= OnCheckButtonClicked;
+        _saveSceneButton.clicked -= OnSaveSceneButtonClicked;
     }
 
     void OnAddButtonClicked() {
@@ -65,6 +70,11 @@ public class UIManager : MonoBehaviour
     void OnCheckButtonClicked() {
         if (CheckButtonClicked != null) {
             CheckButtonClicked.Raise();
+        }
+    }
+    void OnSaveSceneButtonClicked() {
+        if (SaveSceneButtonClicked != null) {
+            SaveSceneButtonClicked.Raise();
         }
     }
 
