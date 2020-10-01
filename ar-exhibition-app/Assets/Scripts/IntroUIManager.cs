@@ -31,7 +31,7 @@ public class IntroUIManager : MonoBehaviour
     }
 
     void OnStartExhibition() {
-
+        SceneManager.LoadScene("VisitorScene", LoadSceneMode.Single);
     }
 
     void OnCreateExhibition() {

@@ -5,7 +5,7 @@
     padding-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
-    background-color: rgba(255, 255, 255, 255);
+    background-color: rgb(255, 255, 255);
 }
 
 .assetItemContainer {
@@ -21,6 +21,10 @@
     padding-top: 20px;
     padding-bottom: 20px;
     flex-direction: row;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
 }
 
 .assetThumbnail {
@@ -41,6 +45,7 @@
     padding-bottom: 2px;
     padding-left: 0;
     padding-right: 0;
+    align-items: flex-start;
 }
 
 .assetName {
@@ -78,6 +83,10 @@
     font-size: 13px;
 }
 
-.assetItemContainer:active,  .assetItemContainer:hover{
-    background-color: rgba(224, 224, 224, 255);
+.assetItemContainer:active {
+    background-color: rgb(224, 224, 224);
+}
+
+.assetItemContainer:hover {
+    background-color: rgb(224, 224, 224);
 }

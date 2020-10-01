@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="assetItemRoot" class="assetItemRoot">
         <Style src="AssetItem.uss" />
-        <ui:VisualElement name="assetItemContainer" class="assetItemContainer">
+        <ui:Button display-tooltip-when-elided="True" name="assetItemContainer" class="assetItemContainer">
             <ui:VisualElement name="assetThumbnail" class="assetThumbnail" />
             <ui:VisualElement name="assetTextContainer" class="assetTextContainer">
                 <ui:Label text="Vincent Schnoor" display-tooltip-when-elided="True" name="assetCreator" class="assetCreator" />
@@ -9,6 +9,6 @@
                 <ui:Label text="Digital Reaity | Visual Effects" display-tooltip-when-elided="True" name="assetSubline" class="assetSubline" />
             </ui:VisualElement>
             <ui:Label text="3D" display-tooltip-when-elided="True" name="assetType" class="assetType" style="-unity-font-style: normal;" />
-        </ui:VisualElement>
+        </ui:Button>
     </ui:VisualElement>
 </ui:UXML>

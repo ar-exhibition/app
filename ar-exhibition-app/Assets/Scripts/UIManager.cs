@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
     private VisualElement _selectedAssetContainer;
     private VisualElement _sceneBar;
     private Button _saveSceneButton;
+    private Button _cancelSceneButton;
     private VisualElement _loadingOverlay;
     private Label _loadingLabel;
 
@@ -47,6 +49,7 @@ public class UIManager : MonoBehaviour
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
         _sceneBar = _root.Q<VisualElement>("sceneBar");
         _saveSceneButton = _sceneBar.Q<Button>("saveSceneButton");
+        _cancelSceneButton = _sceneBar.Q<Button>("cancelSceneButton");
         _loadingOverlay = _root.Q<VisualElement>("loadingOverlay");
         _loadingLabel = _loadingOverlay.Q<Label>("loadingLabel");
 
@@ -60,11 +63,13 @@ public class UIManager : MonoBehaviour
         _addButton.clicked += OnAddButtonClicked;
         _checkButton.clicked += OnCheckButtonClicked;
         _saveSceneButton.clicked += OnSaveSceneButtonClicked;
+        _cancelSceneButton.clicked += OnCancelSceneButtonClicked;
     }
     void OnDisable() {
         _addButton.clicked -= OnAddButtonClicked;
         _checkButton.clicked -= OnCheckButtonClicked;
         _saveSceneButton.clicked -= OnSaveSceneButtonClicked;
+        _cancelSceneButton.clicked += OnCancelSceneButtonClicked;
     }
 
     void OnAddButtonClicked() {
@@ -86,6 +91,11 @@ public class UIManager : MonoBehaviour
         ARWorldMapController worldMap = FindObjectOfType<ARWorldMapController>();
         await worldMap.Save();
         _loadingOverlay.style.display = DisplayStyle.None;
+        SceneManager.LoadScene("IntroScene", LoadSceneMode.Single);
+    }
+
+    void OnCancelSceneButtonClicked() {
+        SceneManager.LoadScene("IntroScene", LoadSceneMode.Single);
     }
 
     public AnimationCurve easingInOutCurve = new AnimationCurve(
@@ -135,18 +145,6 @@ public class UIManager : MonoBehaviour
             _assetListView.makeItem = MakeAssetItem;
         if (_assetListView.bindItem == null)
             _assetListView.bindItem = BindAssetItem;
-        
-        _assetListView.onSelectionChange += (e) => {
-            object[] arr = e.ToArray<object>();
-            if (arr.Length > 0) {
-                AssetData asset = arr[0] as AssetData;
-                SelectedAsset = asset;
-                EnterPlacementMode();
-                if (AssetSelected != null) {
-                    AssetSelected.Raise();
-                }
-            }
-        };
 
         _assetListView.itemsSource = _assets;
         _assetListView.Refresh();
@@ -162,6 +160,13 @@ public class UIManager : MonoBehaviour
         element.Q<Label>("assetName").text = _assets[index].name;
         element.Q<Label>("assetSubline").text = $"{_assets[index].creator.studies} | {_assets[index].course.name}";
         element.Q<Label>("assetType").text = _assets[index].assetType;
+        element.Q<Button>("assetItemContainer").clicked += () => {
+            SelectedAsset = _assets[index];
+            EnterPlacementMode();
+            if (AssetSelected != null) {
+                AssetSelected.Raise();
+            }
+        };
 
         element.userData = _assets[index];
     }
