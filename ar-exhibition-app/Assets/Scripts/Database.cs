@@ -139,6 +139,11 @@ public class Anchor {
 }
 
 [System.Serializable]
+public class AnchorPost {
+    public Anchor[] anchors;
+}
+
+[System.Serializable]
 public class Scene {
     public int sceneId;
     public string name;

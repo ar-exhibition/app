@@ -1792,7 +1792,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1948074387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1806,8 +1806,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ARSession: {fileID: 1595057129}
-  m_SaveButton: {fileID: 52159758}
-  m_LoadButton: {fileID: 1841185076}
 --- !u!4 &1948074388
 Transform:
   m_ObjectHideFlags: 0

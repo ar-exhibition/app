@@ -27,6 +27,8 @@ public class UIManager : MonoBehaviour
     private VisualElement _selectedAssetContainer;
     private VisualElement _sceneBar;
     private Button _saveSceneButton;
+    private VisualElement _loadingOverlay;
+    private Label _loadingLabel;
 
     private AssetData[] _assets;
     [HideInInspector]
@@ -45,6 +47,8 @@ public class UIManager : MonoBehaviour
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
         _sceneBar = _root.Q<VisualElement>("sceneBar");
         _saveSceneButton = _sceneBar.Q<Button>("saveSceneButton");
+        _loadingOverlay = _root.Q<VisualElement>("loadingOverlay");
+        _loadingLabel = _loadingOverlay.Q<Label>("loadingLabel");
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -73,10 +77,15 @@ public class UIManager : MonoBehaviour
             CheckButtonClicked.Raise();
         }
     }
-    void OnSaveSceneButtonClicked() {
+    async void OnSaveSceneButtonClicked() {
         if (SaveSceneButtonClicked != null) {
             SaveSceneButtonClicked.Raise();
         }
+        _loadingOverlay.style.display = DisplayStyle.Flex;
+        _loadingLabel.text = "Saving Scene...";
+        ARWorldMapController worldMap = FindObjectOfType<ARWorldMapController>();
+        await worldMap.Save();
+        _loadingOverlay.style.display = DisplayStyle.None;
     }
 
     public AnimationCurve easingInOutCurve = new AnimationCurve(

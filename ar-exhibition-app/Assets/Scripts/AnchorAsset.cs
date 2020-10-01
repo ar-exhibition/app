@@ -14,22 +14,21 @@ public class AnchorAsset : MonoBehaviour
     private Database _database;
 
     private DatabaseData _databaseData;
+    private AssetData _asset;
 
     // Start is called before the first frame update
     void Start()
     {
         _anchor = GetComponent<ARAnchor>();
         _database = FindObjectOfType<Database>();
-
         _database.GetData(DatabaseLoaded);
     }
 
     void DatabaseLoaded(DatabaseData data) {
         AssetData asset;
-        if (_database.TryGetAssetByAnchorId(_anchor.sessionId.ToString(), out asset)) {
+        if (_database.TryGetAssetByAnchorId(_anchor.trackableId.ToString(), out asset)) {
             LoadAsset(asset);
         }
-
     }
 
     public void LoadAsset(AssetData asset) {
@@ -55,6 +54,15 @@ public class AnchorAsset : MonoBehaviour
                 Debug.Log("Cannot handle asset of type " + asset.assetType);
                 break;
         }
+        _asset = asset;
+    }
+
+    public AssetData GetAsset() {
+        return _asset;
+    }
+    
+    public ARAnchor GetAnchor() {
+        return _anchor;
     }
 
 }

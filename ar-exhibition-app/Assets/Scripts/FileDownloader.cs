@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -40,8 +41,17 @@ public static class FileDownloader
     private static string GetFilePath(string url)
     {
         Uri uri = new Uri(url);
-        string fileName = System.IO.Path.GetFileName(uri.LocalPath);
-        return $"{FileDownloader.FilePath}{fileName}";
+		string query = uri.Query.Substring(1);
+        Dictionary<string,string> dicQueryString = 
+        query.Split('&')
+             .ToDictionary(c => c.Split('=')[0],
+                           c => Uri.UnescapeDataString(c.Split('=')[1]));
+        string fileName;
+        if (dicQueryString.TryGetValue("file", out fileName)) {
+            return $"{FileDownloader.FilePath}{fileName}";
+        } else {
+            return $"{FileDownloader.FilePath}temp.file";
+        }
     }
 
 

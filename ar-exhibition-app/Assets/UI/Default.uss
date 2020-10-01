@@ -199,3 +199,26 @@
 .placementActive #sceneBar {
     display: none;
 }
+
+.loadingOverlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.79);
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.loadingLabel {
+    color: rgb(255, 255, 255);
+    -unity-text-align: upper-center;
+    font-size: 32px;
+    -unity-font: url('/Assets/Fonts/SF-Pro-Display-Medium.otf');
+}

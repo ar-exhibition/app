@@ -1,244 +1,198 @@
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Networking;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using System.Threading.Tasks;
 #if UNITY_IOS
 using UnityEngine.XR.ARKit;
 #endif
 
-namespace UnityEngine.XR.ARFoundation.Samples
+/// <summary>
+/// Demonstrates the saving and loading of an
+/// <a href="https://developer.apple.com/documentation/arkit/arworldmap">ARWorldMap</a>
+/// </summary>
+/// <remarks>
+/// ARWorldMaps are only supported by ARKit, so this API is in the
+/// <c>UntyEngine.XR.ARKit</c> namespace.
+/// </remarks>
+public class ARWorldMapController : MonoBehaviour
 {
+    [Tooltip("The ARSession component controlling the session from which to generate ARWorldMaps.")]
+    [SerializeField]
+    ARSession m_ARSession;
+
     /// <summary>
-    /// Demonstrates the saving and loading of an
-    /// <a href="https://developer.apple.com/documentation/arkit/arworldmap">ARWorldMap</a>
+    /// The ARSession component controlling the session from which to generate ARWorldMaps.
     /// </summary>
-    /// <remarks>
-    /// ARWorldMaps are only supported by ARKit, so this API is in the
-    /// <c>UntyEngine.XR.ARKit</c> namespace.
-    /// </remarks>
-    public class ARWorldMapController : MonoBehaviour
+    public ARSession arSession
     {
-        [Tooltip("The ARSession component controlling the session from which to generate ARWorldMaps.")]
-        [SerializeField]
-        ARSession m_ARSession;
-
-        /// <summary>
-        /// The ARSession component controlling the session from which to generate ARWorldMaps.
-        /// </summary>
-        public ARSession arSession
-        {
-            get { return m_ARSession; }
-            set { m_ARSession = value; }
-        }
-
-        [Tooltip("A UI button component which will generate an ARWorldMap and save it to disk.")]
-        [SerializeField]
-        Button m_SaveButton;
-
-        /// <summary>
-        /// A UI button component which will generate an ARWorldMap and save it to disk.
-        /// </summary>
-        public Button saveButton
-        {
-            get { return m_SaveButton; }
-            set { m_SaveButton = value; }
-        }
-
-        [Tooltip("A UI button component which will load a previously saved ARWorldMap from disk and apply it to the current session.")]
-        [SerializeField]
-        Button m_LoadButton;
-
-        /// <summary>
-        /// A UI button component which will load a previously saved ARWorldMap from disk and apply it to the current session.
-        /// </summary>
-        public Button loadButton
-        {
-            get { return m_LoadButton; }
-            set { m_LoadButton = value; }
-        }
-
-        /// <summary>
-        /// Create an <c>ARWorldMap</c> and save it to disk.
-        /// </summary>
-        public void OnSaveButton()
-        {
-    #if UNITY_IOS
-            StartCoroutine(Save());
-    #endif
-        }
-
-        /// <summary>
-        /// Load an <c>ARWorldMap</c> from disk and apply it
-        /// to the current session.
-        /// </summary>
-        public void OnLoadButton()
-        {
-    #if UNITY_IOS
-            StartCoroutine(Load());
-    #endif
-        }
-
-        /// <summary>
-        /// Reset the <c>ARSession</c>, destroying any existing trackables,
-        /// such as planes. Upon loading a saved <c>ARWorldMap</c>, saved
-        /// trackables will be restored.
-        /// </summary>
-        public void OnResetButton()
-        {
-            m_ARSession.Reset();
-        }
-
-    #if UNITY_IOS
-        IEnumerator Save()
-        {
-            var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
-            if (sessionSubsystem == null)
-            {
-                Log("No session subsystem available. Could not save.");
-                yield break;
-            }
-
-            var request = sessionSubsystem.GetARWorldMapAsync();
-
-            while (!request.status.IsDone())
-                yield return null;
-
-            if (request.status.IsError())
-            {
-                Log(string.Format("Session serialization failed with status {0}", request.status));
-                yield break;
-            }
-
-            var worldMap = request.GetWorldMap();
-            request.Dispose();
-
-            SaveAndDisposeWorldMap(worldMap);
-        }
-
-        IEnumerator Load()
-        {
-            var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
-            if (sessionSubsystem == null)
-            {
-                Log("No session subsystem available. Could not load.");
-                yield break;
-            }
-
-            var file = File.Open(path, FileMode.Open);
-            if (file == null)
-            {
-                Log(string.Format("File {0} does not exist.", path));
-                yield break;
-            }
-
-            Log(string.Format("Reading {0}...", path));
-
-            int bytesPerFrame = 1024 * 10;
-            var bytesRemaining = file.Length;
-            var binaryReader = new BinaryReader(file);
-            var allBytes = new List<byte>();
-            while (bytesRemaining > 0)
-            {
-                var bytes = binaryReader.ReadBytes(bytesPerFrame);
-                allBytes.AddRange(bytes);
-                bytesRemaining -= bytesPerFrame;
-                yield return null;
-            }
-
-            var data = new NativeArray<byte>(allBytes.Count, Allocator.Temp);
-            data.CopyFrom(allBytes.ToArray());
-
-            Log(string.Format("Deserializing to ARWorldMap...", path));
-            ARWorldMap worldMap;
-            if (ARWorldMap.TryDeserialize(data, out worldMap))
-            data.Dispose();
-
-            if (worldMap.valid)
-            {
-                Log("Deserialized successfully.");
-            }
-            else
-            {
-                Debug.LogError("Data is not a valid ARWorldMap.");
-                yield break;
-            }
-
-            Log("Apply ARWorldMap to current session.");
-            sessionSubsystem.ApplyWorldMap(worldMap);
-        }
-
-        void SaveAndDisposeWorldMap(ARWorldMap worldMap)
-        {
-            Log("Serializing ARWorldMap to byte array...");
-            var data = worldMap.Serialize(Allocator.Temp);
-            Log(string.Format("ARWorldMap has {0} bytes.", data.Length));
-
-            var file = File.Open(path, FileMode.Create);
-            var writer = new BinaryWriter(file);
-            writer.Write(data.ToArray());
-            writer.Close();
-            data.Dispose();
-            worldMap.Dispose();
-            Log(string.Format("ARWorldMap written to {0}", path));
-        }
-    #endif
-
-        string path
-        {
-            get
-            {
-                return Path.Combine(Application.persistentDataPath, "my_session.worldmap");
-            }
-        }
-
-        bool supported
-        {
-            get
-            {
-    #if UNITY_IOS
-                return m_ARSession.subsystem is ARKitSessionSubsystem && ARKitSessionSubsystem.worldMapSupported;
-    #else
-                return false;
-    #endif
-            }
-        }
-
-        void Log(string logMessage)
-        {
-            Debug.Log(logMessage);
-        }
-
-        static void SetActive(Button button, bool active)
-        {
-            if (button != null)
-                button.gameObject.SetActive(active);
-        }
-
-        void Update()
-        {
-            if (supported)
-            {
-                SetActive(saveButton, true);
-                SetActive(loadButton, true);
-            }
-            else
-            {
-                SetActive(saveButton, false);
-                SetActive(loadButton, false);
-            }
-
-    #if UNITY_IOS
-            var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
-    #else
-            XRSessionSubsystem sessionSubsystem = null;
-    #endif
-            if (sessionSubsystem == null)
-                return;
-        }
-
+        get { return m_ARSession; }
+        set { m_ARSession = value; }
     }
+
+    public void ResetSession()
+    {
+        m_ARSession.Reset();
+    }
+
+#if UNITY_IOS
+    public async Task<bool> Save()
+    {
+        var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
+        if (sessionSubsystem == null)
+        {
+            Log("No session subsystem available. Could not save.");
+            return false;
+        }
+
+        var request = sessionSubsystem.GetARWorldMapAsync();
+
+        while (!request.status.IsDone())
+            await Task.Delay(100);
+
+        if (request.status.IsError())
+        {
+            Log(string.Format("Session serialization failed with status {0}", request.status));
+            return false;
+        }
+
+        var worldMap = request.GetWorldMap();
+        request.Dispose();
+
+        SaveAndDisposeWorldMap(worldMap);
+        await SaveAnchors();
+        return true;
+    }
+
+    public async Task<bool> SaveAnchors() {
+        AnchorAsset[] anchorAssets = FindObjectsOfType<AnchorAsset>();
+        Debug.Log("Found " + anchorAssets.Length + " anchors");
+        Anchor[] anchors = new Anchor[anchorAssets.Length];
+        for (int i = 0; i < anchorAssets.Length; i++)
+        {
+            AnchorAsset anchorAsset = anchorAssets[i];
+            anchors[i] = new Anchor {assetId = anchorAsset.GetAsset().assetId, anchorId = anchorAsset.GetAnchor().trackableId.ToString(), scale = 1.0f};
+        }
+        AnchorPost anchorPost = new AnchorPost {anchors = anchors};
+        string jsonPost = JsonUtility.ToJson(anchorPost);
+        Debug.Log(jsonPost);
+        using (UnityWebRequest req = new UnityWebRequest("http://luziffer.ddnss.de:8080/api/anchors", "POST"))
+        {   
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPost);
+            req.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);
+            req.SetRequestHeader("Content-Type", "application/json");
+            req.SendWebRequest();
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.Log($"{req.error} : {req.downloadHandler.text}");
+                return false;
+            }
+
+            while (!req.isDone)
+            {
+                await Task.Delay(100);
+            }
+            return true;
+        }
+    }
+
+    public async Task<bool> Load()
+    {
+        var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
+        if (sessionSubsystem == null)
+        {
+            Log("No session subsystem available. Could not load.");
+            return false;
+        }
+
+        var file = File.Open(path, FileMode.Open);
+        if (file == null)
+        {
+            Log(string.Format("File {0} does not exist.", path));
+            return false;
+        }
+
+        Log(string.Format("Reading {0}...", path));
+
+        int bytesPerFrame = 1024 * 10;
+        var bytesRemaining = file.Length;
+        var binaryReader = new BinaryReader(file);
+        var allBytes = new List<byte>();
+        while (bytesRemaining > 0)
+        {
+            var bytes = binaryReader.ReadBytes(bytesPerFrame);
+            allBytes.AddRange(bytes);
+            bytesRemaining -= bytesPerFrame;
+            await Task.Delay(1);
+        }
+
+        var data = new NativeArray<byte>(allBytes.Count, Allocator.Temp);
+        data.CopyFrom(allBytes.ToArray());
+
+        Log(string.Format("Deserializing to ARWorldMap...", path));
+        ARWorldMap worldMap;
+        if (ARWorldMap.TryDeserialize(data, out worldMap))
+        data.Dispose();
+
+        if (worldMap.valid)
+        {
+            Log("Deserialized successfully.");
+        }
+        else
+        {
+            Debug.LogError("Data is not a valid ARWorldMap.");
+            return false;
+        }
+
+        Log("Apply ARWorldMap to current session.");
+        sessionSubsystem.ApplyWorldMap(worldMap);
+        return true;
+    }
+
+    void SaveAndDisposeWorldMap(ARWorldMap worldMap)
+    {
+        Log("Serializing ARWorldMap to byte array...");
+        var data = worldMap.Serialize(Allocator.Temp);
+        Log(string.Format("ARWorldMap has {0} bytes.", data.Length));
+
+        var file = File.Open(path, FileMode.Create);
+        var writer = new BinaryWriter(file);
+        writer.Write(data.ToArray());
+        writer.Close();
+        data.Dispose();
+        worldMap.Dispose();
+        Log(string.Format("ARWorldMap written to {0}", path));
+    }
+#endif
+
+    string path
+    {
+        get
+        {
+            return Path.Combine(Application.persistentDataPath, "my_session.worldmap");
+        }
+    }
+
+    bool supported
+    {
+        get
+        {
+#if UNITY_IOS
+            return m_ARSession.subsystem is ARKitSessionSubsystem && ARKitSessionSubsystem.worldMapSupported;
+#else
+            return false;
+#endif
+        }
+    }
+
+    void Log(string logMessage)
+    {
+        Debug.Log(logMessage);
+    }
+
 }
