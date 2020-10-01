@@ -45,20 +45,28 @@ public class ModelFetcher : MonoBehaviour
     void LoadModel(string path)
     {
         GameObject model = Importer.LoadFromFile(path);
-        Resize(model);
+        Resize(model, GetMaxBounds(model), 1.0f);
         model.transform.SetParent(gameObject.transform);
         model.transform.localPosition = Vector3.zero;
 
     }
 
-    void Resize(GameObject model, float maxDimension = 0.5f)
+    Bounds GetMaxBounds(GameObject g)
     {
-        MeshRenderer renderer = model.GetComponentInChildren<MeshRenderer>();
-        if (renderer != null) {
-            float max = Mathf.Max(Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y), renderer.bounds.size.z);
-            float scalingFactor = max / maxDimension;
-            model.transform.localScale /= scalingFactor;    
-        }   
+        var b = new Bounds(g.transform.position, Vector3.zero);
+        foreach (Renderer r in g.GetComponentsInChildren<Renderer>())
+        {
+            b.Encapsulate(r.bounds);
+        }
+        return b;
+    }
+
+    void Resize(GameObject model, Bounds maxBounds, float maxDimension = 0.5f)
+    {
+
+        float max = Mathf.Max(Mathf.Max(maxBounds.size.x, maxBounds.size.y), maxBounds.size.z);
+        float scalingFactor = max / maxDimension;
+        model.transform.localScale /= scalingFactor;
     }
 
 
