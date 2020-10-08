@@ -46,9 +46,10 @@ public class ModelFetcher : MonoBehaviour
     {
         GameObject model = Importer.LoadFromFile(path);
         Resize(model, GetMaxBounds(model), 1.0f);
+        Vector3 scale = model.transform.localScale;
         model.transform.SetParent(gameObject.transform);
         model.transform.localPosition = Vector3.zero;
-
+        model.transform.localScale = scale;
     }
 
     Bounds GetMaxBounds(GameObject g)

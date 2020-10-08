@@ -10,12 +10,22 @@ public class AnchorAsset : MonoBehaviour
     public GameObject ImageFetcher;
     public GameObject VideoFetcher;
 
+    public GameObject PlacementIndicator;
+    public GameObject Placeholder;
+
     private ARAnchor _anchor;
     private Database _database;
 
     private DatabaseData _databaseData;
     private AssetData _asset;
 
+    private GameObject _gameObject;
+    private Animator _animator;
+
+    void Awake()
+    {
+        _animator = GetComponent<Animator>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -26,35 +36,53 @@ public class AnchorAsset : MonoBehaviour
 
     void DatabaseLoaded(DatabaseData data) {
         AssetData asset;
-        if (_database.TryGetAssetByAnchorId(_anchor.trackableId.ToString(), out asset)) {
-            LoadAsset(asset);
+        if (_anchor != null) {
+            if (_database.TryGetAssetByAnchorId(_anchor.trackableId.ToString(), out asset)) {
+                LoadAsset(asset);
+            }
+        } else {
+            Debug.LogWarning("No Anchor attached to " + gameObject.name);
+            // Load Dummy Asset
+            AssetData dummy = new AssetData {link = "http://127.0.0.1:5500/Astronaut.glb?file=Astronaut.glb", assetType = "3d"};
+            LoadAsset(dummy);
         }
     }
 
     public void LoadAsset(AssetData asset) {
-        GameObject go;
         switch (asset.assetType)
         {
             case "3d":
                 ModelFetcher.GetComponent<ModelFetcher>().Url = asset.link;
-                go = GameObject.Instantiate(ModelFetcher, Vector3.zero, Quaternion.identity, transform);
-                go.transform.localPosition = Vector3.zero;
+                _gameObject = GameObject.Instantiate(ModelFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
+                _gameObject.transform.localPosition = Vector3.zero;
+                CreateCollider();
                 break;
             case "image":
                 ImageFetcher.GetComponent<ImageFetcher>().Url = asset.link;
-                go = GameObject.Instantiate(ImageFetcher, Vector3.zero, Quaternion.identity, transform);
-                go.transform.localPosition = Vector3.zero;
+                _gameObject = GameObject.Instantiate(ImageFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
+                _gameObject.transform.localPosition = Vector3.zero;
+                CreateCollider();
                 break;
             case "video":
                 VideoFetcher.GetComponent<VideoFetcher>().Url = asset.link;
-                go = GameObject.Instantiate(VideoFetcher, Vector3.zero, Quaternion.identity, transform);
-                go.transform.localPosition = Vector3.zero;
+                _gameObject = GameObject.Instantiate(VideoFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
+                _gameObject.transform.localPosition = Vector3.zero;
+                CreateCollider();
                 break;
             default:
                 Debug.Log("Cannot handle asset of type " + asset.assetType);
                 break;
         }
         _asset = asset;
+        _animator.SetTrigger("place");
+    }
+
+    public void EnterSelection() {
+        _animator.SetBool("selected", true);
+    }
+
+    public void ExitSelection() {
+        _animator.SetBool("selected", false);
     }
 
     public AssetData GetAsset() {
@@ -63,6 +91,22 @@ public class AnchorAsset : MonoBehaviour
     
     public ARAnchor GetAnchor() {
         return _anchor;
+    }
+
+    private void CreateCollider() {
+        // Bounds bounds = GetMaxBounds(_gameObject);
+        // GetComponent<BoxCollider>().size = bounds.size;
+        // GetComponent<BoxCollider>().center = bounds.center;
+    }
+
+    Bounds GetMaxBounds(GameObject g)
+    {
+        var b = new Bounds(g.transform.position, Vector3.zero);
+        foreach (Renderer r in g.GetComponentsInChildren<Renderer>())
+        {
+            b.Encapsulate(r.bounds);
+        }
+        return b;
     }
 
 }

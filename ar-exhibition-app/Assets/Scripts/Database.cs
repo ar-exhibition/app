@@ -24,8 +24,12 @@ public class Database : MonoBehaviour
         if (_databaseData == null || forceReload) {
             string result = await Database.GetRequest(ContentRequestUrl);
             _databaseData = JsonUtility.FromJson<DatabaseData>(result);
-            _assetDict = CreateAssetDict(_databaseData.assets);
-            _anchorDict = CreateAnchorDict(_databaseData.anchors);
+            if (_databaseData != null) {
+                _assetDict = CreateAssetDict(_databaseData.assets);
+                _anchorDict = CreateAnchorDict(_databaseData.anchors);
+            } else {
+                Debug.LogWarning("Cannot load Database");
+            }
         }
         if (onDone != null) {
             onDone(_databaseData);
