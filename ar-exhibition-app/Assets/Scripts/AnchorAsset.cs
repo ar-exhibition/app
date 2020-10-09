@@ -55,19 +55,16 @@ public class AnchorAsset : MonoBehaviour
                 ModelFetcher.GetComponent<ModelFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(ModelFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
-                CreateCollider();
                 break;
             case "image":
                 ImageFetcher.GetComponent<ImageFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(ImageFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
-                CreateCollider();
                 break;
             case "video":
                 VideoFetcher.GetComponent<VideoFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(VideoFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
-                CreateCollider();
                 break;
             default:
                 Debug.Log("Cannot handle asset of type " + asset.assetType);
@@ -93,10 +90,10 @@ public class AnchorAsset : MonoBehaviour
         return _anchor;
     }
 
-    private void CreateCollider() {
-         Bounds bounds = GetMaxBounds(_gameObject);
-         GetComponent<BoxCollider>().size = bounds.size * (1 / transform.localScale.x);
-         GetComponent<BoxCollider>().center = bounds.center * (1 / transform.localScale.x);
+    public void CreateCollider() {
+        Bounds bounds = GetMaxBounds(_gameObject);
+        GetComponent<BoxCollider>().size = bounds.size * (1 / transform.localScale.x);
+        GetComponent<BoxCollider>().center = bounds.center * (1 / transform.localScale.x);
     }
 
     Bounds GetMaxBounds(GameObject g)
