@@ -94,9 +94,9 @@ public class AnchorAsset : MonoBehaviour
     }
 
     private void CreateCollider() {
-        // Bounds bounds = GetMaxBounds(_gameObject);
-        // GetComponent<BoxCollider>().size = bounds.size;
-        // GetComponent<BoxCollider>().center = bounds.center;
+         Bounds bounds = GetMaxBounds(_gameObject);
+         GetComponent<BoxCollider>().size = bounds.size * (1 / transform.localScale.x);
+         GetComponent<BoxCollider>().center = bounds.center * (1 / transform.localScale.x);
     }
 
     Bounds GetMaxBounds(GameObject g)

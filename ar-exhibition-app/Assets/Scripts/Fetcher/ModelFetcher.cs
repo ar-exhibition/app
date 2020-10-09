@@ -44,12 +44,24 @@ public class ModelFetcher : MonoBehaviour
 
     void LoadModel(string path)
     {
-        GameObject model = Importer.LoadFromFile(path);
+        GameObject model = Importer.LoadFromFile(path, new ImportSettings(), out AnimationClip[] animClips);
         Resize(model, GetMaxBounds(model), 1.0f);
+        AddAnimations(model, animClips);
         Vector3 scale = model.transform.localScale;
         model.transform.SetParent(gameObject.transform);
         model.transform.localPosition = Vector3.zero;
         model.transform.localScale = scale;
+    }
+
+    void AddAnimations(GameObject model, AnimationClip[] clips)
+    {
+        if (clips.Length > 0)
+        {
+            Animation anim = model.AddComponent<Animation>();
+            clips[0].legacy = true;
+            anim.AddClip(clips[0], clips[0].name);
+            anim.Play(clips[0].name);
+        }
     }
 
     Bounds GetMaxBounds(GameObject g)
