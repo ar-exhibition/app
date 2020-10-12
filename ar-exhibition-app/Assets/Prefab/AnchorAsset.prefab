@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1206037437242284369}
   - component: {fileID: 7931729338285425994}
-  - component: {fileID: 9145612350477477048}
   - component: {fileID: 914934010}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: AnchorAsset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,19 +54,6 @@ MonoBehaviour:
     type: 3}
   PlacementIndicator: {fileID: 6093840963211325146}
   Placeholder: {fileID: 5894660521915567080}
---- !u!65 &9145612350477477048
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425031600425799432}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.7, y: 1, z: 0.7}
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!95 &914934010
 Animator:
   serializedVersion: 3
@@ -96,7 +82,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1890567222951261379}
-  m_Layer: 0
+  - component: {fileID: 2413927297215332041}
+  m_Layer: 8
   m_Name: Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,6 +104,19 @@ Transform:
   m_Father: {fileID: 1206037437242284369}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2413927297215332041
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894660521915567080}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7, y: 1, z: 0.7}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &7620849109794105807
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -76,10 +76,12 @@ public class AnchorAsset : MonoBehaviour
 
     public void EnterSelection() {
         _animator.SetBool("selected", true);
+        PlacementIndicator.SetActive(true);
     }
 
     public void ExitSelection() {
         _animator.SetBool("selected", false);
+        PlacementIndicator.SetActive(false);
     }
 
     public AssetData GetAsset() {
@@ -93,8 +95,8 @@ public class AnchorAsset : MonoBehaviour
     public void CreateCollider() {
         Bounds bounds = GetMaxBounds(_gameObject);
         if (bounds.size.magnitude > 0) {
-            GetComponent<BoxCollider>().size = bounds.size * (1 / transform.localScale.x);
-            GetComponent<BoxCollider>().center = bounds.center * (1 / transform.localScale.x);
+            Placeholder.GetComponent<BoxCollider>().size = bounds.size * (1 / transform.localScale.x);
+            Placeholder.GetComponent<BoxCollider>().center = bounds.center * (1 / transform.localScale.x);
         } else {
             Debug.Log("The bounds returned 0, keeping the default collider size");
         }        
@@ -109,5 +111,7 @@ public class AnchorAsset : MonoBehaviour
         }
         return b;
     }
+
+
 
 }
