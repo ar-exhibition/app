@@ -55,6 +55,7 @@ public class AnchorAsset : MonoBehaviour
                 ModelFetcher.GetComponent<ModelFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(ModelFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
+                _gameObject.transform.localRotation = Quaternion.identity;
                 break;
             case "image":
                 ImageFetcher.GetComponent<ImageFetcher>().Url = asset.link;
@@ -96,7 +97,7 @@ public class AnchorAsset : MonoBehaviour
         Bounds bounds = GetMaxBounds(_gameObject);
         if (bounds.size.magnitude > 0) {
             Placeholder.GetComponent<BoxCollider>().size = bounds.size * (1 / transform.localScale.x);
-            Placeholder.GetComponent<BoxCollider>().center = bounds.center * (1 / transform.localScale.x);
+            Placeholder.GetComponent<BoxCollider>().center = new Vector3(0, bounds.size.y / 2.0f, 0);
         } else {
             Debug.Log("The bounds returned 0, keeping the default collider size");
         }        

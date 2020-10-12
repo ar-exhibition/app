@@ -50,6 +50,7 @@ public class ModelFetcher : MonoBehaviour
         Vector3 scale = model.transform.localScale;
         model.transform.SetParent(gameObject.transform);
         model.transform.localPosition = Vector3.zero;
+        model.transform.localRotation = Quaternion.identity;
         model.transform.localScale = scale;
     }
 
