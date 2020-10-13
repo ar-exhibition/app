@@ -14,12 +14,15 @@ public class SelectAssetGesture : MonoBehaviour
     private Vector2 startTouch, swipeDelta;
     private bool isDraging = false, isMultiTouching;
 
+    private UIManager _uiManager;
+
     ARRaycastManager _raycastManager;
     static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
 
     void Start() {
         layerMask = LayerMask.GetMask("Asset");
         _raycastManager = FindObjectOfType<ARRaycastManager>();
+        _uiManager = FindObjectOfType<UIManager>();
     }
 
     void Update() {
@@ -134,9 +137,11 @@ public class SelectAssetGesture : MonoBehaviour
                 Debug.Log("Touched anchor asset");
                 if (lastSelected != null) {
                     lastSelected.ExitSelection();
+                    _uiManager.ExitSelectionMode();
                 }
                 if (lastSelected != targetAnchor) {
                     targetAnchor.EnterSelection();
+                    _uiManager.EnterSelectionMode(targetAnchor.GetAsset());
                     lastSelected = targetAnchor;
                 } else {
                     lastSelected = null;
@@ -144,5 +149,12 @@ public class SelectAssetGesture : MonoBehaviour
                 
             }
         } 
+    }
+
+    public void DeselectCurrentAsset() {
+        if (lastSelected != null) {
+            lastSelected.ExitSelection();
+            _uiManager.ExitSelectionMode();
+        }
     }
 }

@@ -222,3 +222,18 @@
     font-size: 32px;
     -unity-font: url('/Assets/Fonts/SF-Pro-Display-Medium.otf');
 }
+
+.cancelButton {
+    background-image: url('/Assets/Sprites/x_button.png');
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    display: none;
+}

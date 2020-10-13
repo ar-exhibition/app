@@ -6,10 +6,14 @@
             <ui:Instance template="SideMenu" name="SideMenu" class="sideMenu" />
         </ui:VisualElement>
         <ui:VisualElement name="rightCol" class="rightCol">
+            <ui:Button display-tooltip-when-elided="True" name="cancelButton" class="cancelButton" />
             <ui:Button name="addButton" class="addButton">
                 <ui:VisualElement name="addButtonBg" class="addButtonBg" />
             </ui:Button>
             <ui:Button display-tooltip-when-elided="True" name="checkButton" class="checkButton">
+                <ui:VisualElement name="checkButtonBg" class="checkButtonBg" />
+            </ui:Button>
+            <ui:Button display-tooltip-when-elided="True" name="selectCheckButton" class="checkButton">
                 <ui:VisualElement name="checkButtonBg" class="checkButtonBg" />
             </ui:Button>
         </ui:VisualElement>

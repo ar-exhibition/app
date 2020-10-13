@@ -13,8 +13,10 @@ public class UIManager : MonoBehaviour
 
     public GameEvent AddButtonClicked;
     public GameEvent CheckButtonClicked;
+    public GameEvent CancelButtonClicked;
     public GameEvent AssetSelected;
     public GameEvent SaveSceneButtonClicked;
+    public GameEvent SelectionCheckButtonClicked;
 
     private Database _database;
 
@@ -23,6 +25,8 @@ public class UIManager : MonoBehaviour
     private VisualElement _root;
     private Button _addButton;
     private Button _checkButton;
+    private Button _cancelButton;
+    private Button _selectCheckButton;
     private VisualElement _sideMenuContainer;
     private ListView _assetListView;
     private VisualElement _selectedAssetContainer;
@@ -44,6 +48,8 @@ public class UIManager : MonoBehaviour
         _root = _UIDocument.rootVisualElement;
         _addButton = _root.Q<Button>("addButton");
         _checkButton = _root.Q<Button>("checkButton");
+        _cancelButton = _root.Q<Button>("cancelButton");
+        _selectCheckButton = _root.Q<Button>("selectCheckButton");
         _sideMenuContainer = _root.Q<VisualElement>("sideMenuContainer");
         _assetListView = _root.Q<ListView>("assetList");
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
@@ -62,14 +68,18 @@ public class UIManager : MonoBehaviour
     void OnEnable() {
         _addButton.clicked += OnAddButtonClicked;
         _checkButton.clicked += OnCheckButtonClicked;
+        _cancelButton.clicked += OnCancelButtonClicked;
         _saveSceneButton.clicked += OnSaveSceneButtonClicked;
         _cancelSceneButton.clicked += OnCancelSceneButtonClicked;
+        _selectCheckButton.clicked += OnSelectionCheckButtonClicked;
     }
     void OnDisable() {
         _addButton.clicked -= OnAddButtonClicked;
         _checkButton.clicked -= OnCheckButtonClicked;
+        _cancelButton.clicked -= OnCancelButtonClicked;
         _saveSceneButton.clicked -= OnSaveSceneButtonClicked;
-        _cancelSceneButton.clicked += OnCancelSceneButtonClicked;
+        _cancelSceneButton.clicked -= OnCancelSceneButtonClicked;
+        _selectCheckButton.clicked -= OnSelectionCheckButtonClicked;
     }
 
     void OnAddButtonClicked() {
@@ -98,6 +108,18 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene("IntroScene", LoadSceneMode.Single);
     }
 
+    void OnCancelButtonClicked() {
+        if (CancelButtonClicked != null) {
+            CancelButtonClicked.Raise();
+        }
+    }
+    
+    void OnSelectionCheckButtonClicked() {
+        if (SelectionCheckButtonClicked != null) {
+            SelectionCheckButtonClicked.Raise();
+        }
+    }
+
     public AnimationCurve easingInOutCurve = new AnimationCurve(
         new Keyframe(0, 0),
         new Keyframe(1, 1)
@@ -124,6 +146,7 @@ public class UIManager : MonoBehaviour
         SlideOutMenu();
         _addButton.style.display = DisplayStyle.None;
         _checkButton.style.display = DisplayStyle.Flex;
+        _cancelButton.style.display = DisplayStyle.Flex;
         _root.AddToClassList("placementActive");
         if (SelectedAsset != null) {
             _selectedAssetContainer.style.display = DisplayStyle.Flex;
@@ -135,6 +158,25 @@ public class UIManager : MonoBehaviour
         // SlideOutMenu();
         _addButton.style.display = DisplayStyle.Flex;
         _checkButton.style.display = DisplayStyle.None;
+        _selectedAssetContainer.style.display = DisplayStyle.None;
+        _cancelButton.style.display = DisplayStyle.None;
+        _root.RemoveFromClassList("placementActive");
+    }
+
+    public void EnterSelectionMode(AssetData asset) {
+        _addButton.style.display = DisplayStyle.None;
+        _selectCheckButton.style.display = DisplayStyle.Flex;
+        _root.AddToClassList("placementActive");
+        if (asset != null) {
+            _selectedAssetContainer.style.display = DisplayStyle.Flex;
+            _selectedAssetContainer.Q<Label>("selectedCreator").text = asset.creator.name;
+            _selectedAssetContainer.Q<Label>("selectedName").text = asset.name;
+        }
+    }
+
+    public void ExitSelectionMode() {
+        _addButton.style.display = DisplayStyle.Flex;
+        _selectCheckButton.style.display = DisplayStyle.None;
         _selectedAssetContainer.style.display = DisplayStyle.None;
         _root.RemoveFromClassList("placementActive");
     }
