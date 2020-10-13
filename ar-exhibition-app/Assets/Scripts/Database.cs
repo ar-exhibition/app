@@ -54,6 +54,14 @@ public class Database : MonoBehaviour
         asset = null;
         return false;
     }
+    
+    public bool TryGetAnchorById(string anchorId, out Anchor anchor) {
+        if (_anchorDict.TryGetValue(anchorId, out anchor)) {
+            return true;
+        }
+        anchor = null;
+        return false;
+    }
 
     private Dictionary<int, AssetData> CreateAssetDict(AssetData[] assets) {
 

@@ -13,6 +13,9 @@ public class AnchorAsset : MonoBehaviour
     public GameObject PlacementIndicator;
     public GameObject Placeholder;
 
+    [Header("Debug")]
+    public bool LoadDummyObject = false;
+
     private ARAnchor _anchor;
     private Database _database;
 
@@ -36,15 +39,21 @@ public class AnchorAsset : MonoBehaviour
 
     void DatabaseLoaded(DatabaseData data) {
         AssetData asset;
+        Anchor anchor;
         if (_anchor != null) {
             if (_database.TryGetAssetByAnchorId(_anchor.trackableId.ToString(), out asset)) {
                 LoadAsset(asset);
             }
+            if (_database.TryGetAnchorById(_anchor.trackableId.ToString(), out anchor)) {
+                transform.localScale = Vector3.one *  anchor.scale;
+            }
         } else {
             Debug.LogWarning("No Anchor attached to " + gameObject.name);
             // Load Dummy Asset
-            // AssetData dummy = new AssetData {link = "https://www.dropbox.com/s/4rz9t48paxuhhoj/Astronaut.glb?dl=1&type=assets&file=Astronaut.glb", assetType = "3d"};
-            // LoadAsset(dummy);
+            if (LoadDummyObject) {
+                AssetData dummy = new AssetData {link = "https://www.dropbox.com/s/4rz9t48paxuhhoj/Astronaut.glb?dl=1&type=assets&file=Astronaut.glb", assetType = "3d"};
+                LoadAsset(dummy);
+            }
         }
     }
 
