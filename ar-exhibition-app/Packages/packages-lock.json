@@ -1,5 +1,23 @@
 {
   "dependencies": {
+    "com.kyrylokuzyk.arfoundationremote": {
+      "version": "https://kuzykkirill:gXfNFPSZ1sfx3PsiMxPz@gitlab.com/kuzykkirill/arfoundationremote.git#cacea8478109676e91cd291dc7af89e363cf0337",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.xr.arfoundation": "3.0.1",
+        "com.unity.xr.arsubsystems": "3.0.0",
+        "com.unity.xr.management": "3.0.4",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.particlesystem": "1.0.0",
+        "com.unity.modules.xr": "1.0.0",
+        "com.unity.modules.vr": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.unitywebrequesttexture": "1.0.0"
+      },
+      "hash": "cacea8478109676e91cd291dc7af89e363cf0337"
+    },
     "com.siccity.gltfutility": {
       "version": "https://github.com/siccity/gltfutility.git",
       "depth": 0,
