@@ -1082,6 +1082,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlacementIndicator: {fileID: 1685373692}
+  ObjectToPlace: {fileID: 1425031600425799432, guid: 50c133fd8fa6e408495852ba3d04f7cc,
+    type: 3}
 --- !u!114 &888480544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1175,8 +1177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 1425031600425799432, guid: 50c133fd8fa6e408495852ba3d04f7cc,
-    type: 3}
+  m_AnchorPrefab: {fileID: 0}
 --- !u!114 &888480549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1848,6 +1849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ARSession: {fileID: 1595057129}
+  m_ARAnchorManager: {fileID: 888480547}
 --- !u!4 &1948074388
 Transform:
   m_ObjectHideFlags: 0

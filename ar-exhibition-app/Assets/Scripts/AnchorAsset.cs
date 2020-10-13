@@ -43,8 +43,8 @@ public class AnchorAsset : MonoBehaviour
         } else {
             Debug.LogWarning("No Anchor attached to " + gameObject.name);
             // Load Dummy Asset
-            AssetData dummy = new AssetData {link = "https://www.dropbox.com/s/4rz9t48paxuhhoj/Astronaut.glb?dl=1&type=assets&file=Astronaut.glb", assetType = "3d"};
-            LoadAsset(dummy);
+            // AssetData dummy = new AssetData {link = "https://www.dropbox.com/s/4rz9t48paxuhhoj/Astronaut.glb?dl=1&type=assets&file=Astronaut.glb", assetType = "3d"};
+            // LoadAsset(dummy);
         }
     }
 

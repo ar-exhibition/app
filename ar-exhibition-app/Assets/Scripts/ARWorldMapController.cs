@@ -35,6 +35,9 @@ public class ARWorldMapController : MonoBehaviour
         set { m_ARSession = value; }
     }
 
+    [SerializeField]
+    ARAnchorManager m_ARAnchorManager;
+
     public void ResetSession()
     {
         m_ARSession.Reset();
@@ -61,11 +64,11 @@ public class ARWorldMapController : MonoBehaviour
             return false;
         }
 
+        await SaveAnchors();
         var worldMap = request.GetWorldMap();
         request.Dispose();
 
         SaveAndDisposeWorldMap(worldMap);
-        await SaveAnchors();
         return true;
     }
 
@@ -76,7 +79,8 @@ public class ARWorldMapController : MonoBehaviour
         for (int i = 0; i < anchorAssets.Length; i++)
         {
             AnchorAsset anchorAsset = anchorAssets[i];
-            anchors[i] = new Anchor {assetId = anchorAsset.GetAsset().assetId, anchorId = anchorAsset.GetAnchor().trackableId.ToString(), scale = 1.0f};
+            ARAnchor anchor = m_ARAnchorManager.AddAnchor(new Pose(anchorAsset.transform.position, anchorAsset.transform.rotation));
+            anchors[i] = new Anchor {assetId = anchorAsset.GetAsset().assetId, anchorId = anchor.trackableId.ToString(), scale = anchorAsset.transform.localScale.x};
         }
         AnchorPost anchorPost = new AnchorPost {anchors = anchors};
         string jsonPost = JsonUtility.ToJson(anchorPost);
