@@ -561,6 +561,8 @@ GameObject:
   - component: {fileID: 204480972}
   - component: {fileID: 204480971}
   - component: {fileID: 204480974}
+  - component: {fileID: 204480976}
+  - component: {fileID: 204480975}
   m_Layer: 0
   m_Name: Interaction
   m_TagString: Untagged
@@ -726,6 +728,74 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: SelectAssetGesture, Assembly-CSharp
         m_MethodName: DeleteCurrentAsset
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &204480975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204480967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20061d5394155454f93663a60c8b8ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 2f90636406141436f8d0239493841486, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 204480968}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!114 &204480976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204480967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20061d5394155454f93663a60c8b8ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 9f17608a840ca4f6f850617f4a71e78b, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 204480968}
+        m_TargetAssemblyTypeName: SelectAssetGesture, Assembly-CSharp
+        m_MethodName: DeselectCurrentAsset
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 204480968}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -956,6 +1026,8 @@ MonoBehaviour:
   SaveSceneButtonClicked: {fileID: 0}
   SelectionCheckButtonClicked: {fileID: 11400000, guid: cb3d2d301879c4136b6b5344f5aeb763,
     type: 2}
+  MenuOpened: {fileID: 11400000, guid: 9f17608a840ca4f6f850617f4a71e78b, type: 2}
+  MenuClosed: {fileID: 11400000, guid: 2f90636406141436f8d0239493841486, type: 2}
   SelectedAsset:
     assetId: 0
     creator:

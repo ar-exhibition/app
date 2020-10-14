@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
     public GameEvent AssetSelected;
     public GameEvent SaveSceneButtonClicked;
     public GameEvent SelectionCheckButtonClicked;
+    public GameEvent MenuOpened;
+    public GameEvent MenuClosed;
 
     private Database _database;
 
@@ -141,12 +143,18 @@ public class UIManager : MonoBehaviour
             SlideInMenu();
         } else {
             SlideOutMenu();
+            if (MenuClosed != null) {
+                MenuClosed.Raise();
+            }
         }
     }
 
     public void SlideInMenu() {
         StartCoroutine(SlideMenuAnimation(0f, 0.4f));
         _root.AddToClassList("menuActive");
+        if (MenuOpened != null) {
+            MenuOpened.Raise();
+        }
     }
     public void SlideOutMenu() {
         _root.RemoveFromClassList("menuActive");
