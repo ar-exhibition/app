@@ -158,19 +158,43 @@ public class ARWorldMapController : MonoBehaviour
         return true;
     }
 
-    void SaveAndDisposeWorldMap(ARWorldMap worldMap)
+    async Task<bool> SaveAndDisposeWorldMap(ARWorldMap worldMap)
     {
         Log("Serializing ARWorldMap to byte array...");
         var data = worldMap.Serialize(Allocator.Temp);
         Log(string.Format("ARWorldMap has {0} bytes.", data.Length));
 
-        var file = File.Open(path, FileMode.Create);
+        FileStream file = File.Open(path, FileMode.Create);
         var writer = new BinaryWriter(file);
         writer.Write(data.ToArray());
         writer.Close();
-        data.Dispose();
         worldMap.Dispose();
         Log(string.Format("ARWorldMap written to {0}", path));
+
+        WWWForm form = new WWWForm();
+        form.AddField("SceneID", "24");
+        form.AddField("SceneName", "24");
+        form.AddField("FileUUID", "my_session");
+        form.AddField("MarkerUUID", "my_session");
+        form.AddBinaryData("files[]", data.ToArray(), "my_session");
+        using (UnityWebRequest req = UnityWebRequest.Post("http://luziffer.ddnss.de:8080/api/scenes", form))
+        {   
+            req.SendWebRequest();
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.Log(req.error);
+                data.Dispose();
+                return false;
+            }
+
+            while (!req.isDone)
+            {
+                await Task.Delay(100);
+            }
+        }
+        data.Dispose();
+        return true;
+
     }
 #endif
 
@@ -178,7 +202,7 @@ public class ARWorldMapController : MonoBehaviour
     {
         get
         {
-            return Path.Combine(Application.persistentDataPath, "my_session.worldmap");
+            return Path.Combine(Application.persistentDataPath, "my_session");
         }
     }
 
