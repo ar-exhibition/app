@@ -44,14 +44,62 @@ public class ModelFetcher : MonoBehaviour
 
     void LoadModel(string path)
     {
-        GameObject model = Importer.LoadFromFile(path, new ImportSettings(), out AnimationClip[] animClips);
-        Resize(model, GetMaxBounds(model), 1.0f);
-        AddAnimations(model, animClips);
-        Vector3 scale = model.transform.localScale;
-        model.transform.SetParent(gameObject.transform);
-        model.transform.localPosition = Vector3.zero;
-        model.transform.localRotation = Quaternion.identity;
-        model.transform.localScale = scale;
+        try
+        {
+            GameObject model = Importer.LoadFromFile(path, new ImportSettings(), out AnimationClip[] animClips);
+            Resize(model, GetMaxBounds(model), 1.0f);
+            AddAnimations(model, animClips);
+            Vector3 scale = model.transform.localScale;
+            model.transform.SetParent(gameObject.transform);
+            model.transform.localPosition = Vector3.zero;
+            model.transform.localRotation = Quaternion.identity;
+            model.transform.localScale = scale;
+        }
+        catch
+        {
+            Debug.Log("Something went wrong");
+            try
+            {
+                StartCoroutine(DeleteFile(path));
+            }
+            catch
+            {
+                Debug.Log("Can't delete file");
+            }
+        }
+
+    }
+
+    public static bool isFileLocked(FileInfo file)
+    {
+        FileStream stream = null;
+
+        try
+        {
+            stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+        }
+        catch (IOException)
+        {
+            return true;
+        }
+        finally
+        {
+            if (stream != null)
+                stream.Close();
+        }
+
+        return false;
+    }
+
+    public IEnumerator DeleteFile(string path)
+    {
+        FileInfo filePath = new FileInfo(path);
+
+        while (isFileLocked(filePath))
+        {
+            yield return null;
+        }
+        File.Delete(path);
     }
 
     void AddAnimations(GameObject model, AnimationClip[] clips)
