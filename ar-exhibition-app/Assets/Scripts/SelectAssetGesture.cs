@@ -157,4 +157,12 @@ public class SelectAssetGesture : MonoBehaviour
             _uiManager.ExitSelectionMode();
         }
     }
+    
+    public void DeleteCurrentAsset() {
+        if (lastSelected != null) {
+            lastSelected.Delete();
+            lastSelected = null;
+            Reset();
+        }
+    }
 }

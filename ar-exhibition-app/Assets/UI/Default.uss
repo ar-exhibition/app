@@ -237,3 +237,23 @@
     border-bottom-width: 0;
     display: none;
 }
+
+.deleteButton {
+    background-image: url('/Assets/Sprites/trash_icon.png');
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    width: 25px;
+    height: 27px;
+    margin-left: -2px;
+    margin-right: 0;
+    margin-top: 25px;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    display: none;
+}

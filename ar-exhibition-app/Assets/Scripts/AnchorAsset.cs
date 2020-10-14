@@ -123,5 +123,14 @@ public class AnchorAsset : MonoBehaviour
     }
 
 
+    public void Delete() {
+        _animator.SetTrigger("delete");
+    }
+
+    public void Destroy() {
+        GameObject.Destroy(gameObject);
+    }
+
+
 
 }

@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public GameEvent AddButtonClicked;
     public GameEvent CheckButtonClicked;
     public GameEvent CancelButtonClicked;
+    public GameEvent DeleteButtonClicked;
     public GameEvent AssetSelected;
     public GameEvent SaveSceneButtonClicked;
     public GameEvent SelectionCheckButtonClicked;
@@ -26,6 +27,7 @@ public class UIManager : MonoBehaviour
     private Button _addButton;
     private Button _checkButton;
     private Button _cancelButton;
+    private Button _deleteButton;
     private Button _selectCheckButton;
     private VisualElement _sideMenuContainer;
     private ListView _assetListView;
@@ -49,6 +51,7 @@ public class UIManager : MonoBehaviour
         _addButton = _root.Q<Button>("addButton");
         _checkButton = _root.Q<Button>("checkButton");
         _cancelButton = _root.Q<Button>("cancelButton");
+        _deleteButton = _root.Q<Button>("deleteButton");
         _selectCheckButton = _root.Q<Button>("selectCheckButton");
         _sideMenuContainer = _root.Q<VisualElement>("sideMenuContainer");
         _assetListView = _root.Q<ListView>("assetList");
@@ -69,6 +72,7 @@ public class UIManager : MonoBehaviour
         _addButton.clicked += OnAddButtonClicked;
         _checkButton.clicked += OnCheckButtonClicked;
         _cancelButton.clicked += OnCancelButtonClicked;
+        _deleteButton.clicked += OnDeleteButtonClicked;
         _saveSceneButton.clicked += OnSaveSceneButtonClicked;
         _cancelSceneButton.clicked += OnCancelSceneButtonClicked;
         _selectCheckButton.clicked += OnSelectionCheckButtonClicked;
@@ -77,6 +81,7 @@ public class UIManager : MonoBehaviour
         _addButton.clicked -= OnAddButtonClicked;
         _checkButton.clicked -= OnCheckButtonClicked;
         _cancelButton.clicked -= OnCancelButtonClicked;
+        _deleteButton.clicked -= OnDeleteButtonClicked;
         _saveSceneButton.clicked -= OnSaveSceneButtonClicked;
         _cancelSceneButton.clicked -= OnCancelSceneButtonClicked;
         _selectCheckButton.clicked -= OnSelectionCheckButtonClicked;
@@ -117,6 +122,12 @@ public class UIManager : MonoBehaviour
     void OnSelectionCheckButtonClicked() {
         if (SelectionCheckButtonClicked != null) {
             SelectionCheckButtonClicked.Raise();
+        }
+    }
+    
+    void OnDeleteButtonClicked() {
+        if (DeleteButtonClicked != null) {
+            DeleteButtonClicked.Raise();
         }
     }
 
@@ -165,6 +176,7 @@ public class UIManager : MonoBehaviour
 
     public void EnterSelectionMode(AssetData asset) {
         _addButton.style.display = DisplayStyle.None;
+        _deleteButton.style.display = DisplayStyle.Flex;
         _selectCheckButton.style.display = DisplayStyle.Flex;
         _root.AddToClassList("placementActive");
         if (asset != null) {
@@ -176,6 +188,7 @@ public class UIManager : MonoBehaviour
 
     public void ExitSelectionMode() {
         _addButton.style.display = DisplayStyle.Flex;
+        _deleteButton.style.display = DisplayStyle.None;
         _selectCheckButton.style.display = DisplayStyle.None;
         _selectedAssetContainer.style.display = DisplayStyle.None;
         _root.RemoveFromClassList("placementActive");
