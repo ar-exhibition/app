@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour
     private Button _selectCheckButton;
     private VisualElement _sideMenuContainer;
     private ListView _assetListView;
+    private ScrollView _assetScrollView;
     private VisualElement _selectedAssetContainer;
     private VisualElement _sceneBar;
     private Button _saveSceneButton;
@@ -43,6 +44,9 @@ public class UIManager : MonoBehaviour
     private AssetData[] _assets;
     [HideInInspector]
     public AssetData SelectedAsset;
+
+    private bool dragging = false;
+    private float dragStart;
 
     // Start is called before the first frame update
     void Awake()
@@ -57,12 +61,17 @@ public class UIManager : MonoBehaviour
         _selectCheckButton = _root.Q<Button>("selectCheckButton");
         _sideMenuContainer = _root.Q<VisualElement>("sideMenuContainer");
         _assetListView = _root.Q<ListView>("assetList");
+        _assetScrollView = _assetListView.Q<ScrollView>(null, "unity-scroll-view");
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
         _sceneBar = _root.Q<VisualElement>("sceneBar");
         _saveSceneButton = _sceneBar.Q<Button>("saveSceneButton");
         _cancelSceneButton = _sceneBar.Q<Button>("cancelSceneButton");
         _loadingOverlay = _root.Q<VisualElement>("loadingOverlay");
         _loadingLabel = _loadingOverlay.Q<Label>("loadingLabel");
+
+        _assetScrollView.RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
+        _assetScrollView.RegisterCallback<MouseUpEvent>(OnMouseUp, TrickleDown.TrickleDown);
+        _assetScrollView.RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -71,6 +80,7 @@ public class UIManager : MonoBehaviour
     }
 
     void OnEnable() {
+        Debug.Log(_assetScrollView);
         _addButton.clicked += OnAddButtonClicked;
         _checkButton.clicked += OnCheckButtonClicked;
         _cancelButton.clicked += OnCancelButtonClicked;
@@ -224,10 +234,12 @@ public class UIManager : MonoBehaviour
         element.Q<Label>("assetSubline").text = $"{_assets[index].creator.studies} | {_assets[index].course.name}";
         element.Q<Label>("assetType").text = _assets[index].assetType;
         element.Q<Button>("assetItemContainer").clicked += () => {
-            SelectedAsset = _assets[index];
-            EnterPlacementMode();
-            if (AssetSelected != null) {
-                AssetSelected.Raise();
+            if (!dragging) {
+                SelectedAsset = _assets[index];
+                EnterPlacementMode();
+                if (AssetSelected != null) {
+                    AssetSelected.Raise();
+                }
             }
         };
 
@@ -246,6 +258,32 @@ public class UIManager : MonoBehaviour
             _sideMenuContainer.style.right = Mathf.Lerp(origin, target, curvePercent);
             yield return null;
         }
+    }
+
+    private void OnMouseMove(MouseMoveEvent evt)
+    {
+        if (dragging)
+        {
+            Debug.Log("scrolling");
+            _assetScrollView.scrollOffset = new Vector2(0, dragStart - evt.localMousePosition.y);
+        }
+    }
+    
+    private void OnMouseUp(MouseUpEvent evt)
+    {
+        dragging = false;
+        Debug.Log("on mouse up");
+        if (Mathf.Abs(dragStart - evt.localMousePosition.y) > 5)
+        {
+            Debug.Log("StopImmediatePropagation");
+            evt.StopImmediatePropagation();
+        }
+    }
+    
+    private void OnMouseDown(MouseDownEvent evt)
+    {
+        dragging = true;
+        dragStart = evt.localMousePosition.y;
     }
 
 
