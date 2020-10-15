@@ -9,6 +9,7 @@ public class LoadScene : MonoBehaviour
 {
 
     XRReferenceImage _referenceImage;
+    ARTrackedImageManager _imageManager;
 
     MarkerManager _markerManager;
     List<Scene> _sceneList;
@@ -29,8 +30,16 @@ public class LoadScene : MonoBehaviour
         if(TryGetSceneFromReferenceImage(_referenceImage, out scene)) {
             Debug.Log("Found Name: " + scene.marker.name);
             Debug.Log("Corresponding worldMapLink: " + scene.worldMapLink);
-            _sceneInfo.SetScene(scene);
-            _sceneInfo.LoadScene(_sceneInfo.GetSceneType());
+            if (scene.worldMapLink != "")
+            {
+                _imageManager.enabled = false;
+                _sceneInfo.SetScene(scene);
+                _sceneInfo.LoadScene(_sceneInfo.GetSceneType());
+            }
+            else
+            {
+                Debug.Log("No WorldMapLink found");
+            }
         };
     }
 
