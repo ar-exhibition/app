@@ -19,17 +19,25 @@ public class LoadScene : MonoBehaviour
         _referenceImage = GetComponent<ARTrackedImage>().referenceImage;
         _markerManager = GameObject.FindObjectOfType<MarkerManager>();
         _sceneList = _markerManager.GetSceneList();
+
+        Scene scene;
+        if(TryGetSceneFromReferenceImage(_referenceImage, out scene)) {
+            Debug.Log("Found Name: " + scene.marker.name);
+            Debug.Log("Corresponding worldMapLink: " + scene.worldMapLink);
+        };
     }
 
-    void FindWorldLink (string imageName)
+    bool TryGetSceneFromReferenceImage (XRReferenceImage referenceImage, out Scene scene)
     {
-        foreach (Scene scene in _sceneList)
+        foreach (Scene _scene in _sceneList)
         {
-            if (_referenceImage.name == scene.marker.name)
+            if (referenceImage.name == _scene.marker.name)
             {
-                Debug.Log("Found Name: " + scene.marker.name);
-                Debug.Log("Corresponding worldMapLink: " + scene.worldMapLink);
+                scene = _scene;
+                return true;
             }
         }
+        scene = null;
+        return false;
     }
 }
