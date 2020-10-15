@@ -15,6 +15,7 @@ public class LoadScene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Found Marker");
         _referenceImage = GetComponent<ARTrackedImage>().referenceImage;
         _markerManager = GameObject.FindObjectOfType<MarkerManager>();
         _sceneList = _markerManager.GetSceneList();

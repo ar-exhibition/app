@@ -24,38 +24,53 @@ public class MarkerManager : MonoBehaviour
 
         runtimeLibrary = _arTrackedImageManager.CreateRuntimeLibrary();
         mutableLibrary = runtimeLibrary as MutableRuntimeReferenceImageLibrary;
+        _arTrackedImageManager.referenceLibrary = mutableLibrary;
+        _arTrackedImageManager.enabled = true;
 
+        GetMarkerData();
+    }
+
+    private void GetMarkerData()
+    {
         _database.GetData((data) =>
         {
             foreach (Scene scene in data.scenes)
             {
                 _scenes.Add(scene);
                 Marker newMarker = scene.marker;
-                _markers.Add(newMarker);
-                
-                FileDownloader.DownloadFile(newMarker.link, false, (url) =>
+                bool addMarker = true;
+                foreach (Marker marker in _markers)
                 {
-                    StartCoroutine(AddImage(url, newMarker.name));
-                });
+                    if (marker.name.Equals(newMarker.name))
+                    {
+                        addMarker = false;
+                    }
+                }
+                if (addMarker)
+                    _markers.Add(newMarker);
             }
-            _arTrackedImageManager.referenceLibrary = mutableLibrary;
-            _arTrackedImageManager.enabled = true;
-            Debug.Log(_arTrackedImageManager.referenceLibrary.count);
-            Debug.Log(_arTrackedImageManager.referenceLibrary == mutableLibrary);
-            Debug.Log(_arTrackedImageManager.descriptor.supportsMutableLibrary);
-        });
+            DownloadMarker();
+        });  
     }
 
-    private IEnumerator AddImage(string path, string name)
+    private void DownloadMarker()
     {
-        FileInfo filePath = new FileInfo(path);
-        while (isFileLocked(filePath))
+        foreach (Marker marker in _markers)
         {
-            yield return null;
+            FileDownloader.DownloadFile(marker.link, false, (path) =>
+            {
+                Texture2D tex = LoadImage(path);
+                AddMarkerToLibrary(tex, marker.name);
+            });
         }
-        Texture2D texture = LoadImage(path);
-        mutableLibrary.ScheduleAddImageJob(texture, name, 1f);
     }
+
+    private void AddMarkerToLibrary(Texture2D texture, string name)
+    {
+        Debug.Log("Called");
+        mutableLibrary.ScheduleAddImageJob(texture, name, 0.1f);
+    }
+
 
     public static bool isFileLocked(FileInfo file)
     {
