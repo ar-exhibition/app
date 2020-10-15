@@ -5,9 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneInfo : MonoBehaviour
 {
-
     private Scene _scene;
-    private bool _curator = true;
 
     private void Awake()
     {
@@ -24,26 +22,11 @@ public class SceneInfo : MonoBehaviour
         return _scene;
     }
 
-    public void SetCurator(bool state)
-    {
-        _curator = state;
+    public void EnterExhibition() {
+        SceneManager.LoadScene("VisitorScene");
     }
-
-    public bool GetCurator()
-    {
-        return _curator;
-    }
-
-    public string GetSceneType()
-    {
-        if (_curator)
-            return "CuratorScene";
-        else
-            return "VisitorScene";
-    }
-
-    public void LoadScene(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName);
+    
+    public void EditExhibition() {
+        SceneManager.LoadScene("CuratorScene");
     }
 }

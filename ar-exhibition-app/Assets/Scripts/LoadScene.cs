@@ -16,6 +16,8 @@ public class LoadScene : MonoBehaviour
 
     SceneInfo _sceneInfo;
 
+    private IntroUIManager _introUIManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +25,7 @@ public class LoadScene : MonoBehaviour
         _referenceImage = GetComponent<ARTrackedImage>().referenceImage;
         _markerManager = GameObject.FindObjectOfType<MarkerManager>();
         _sceneList = _markerManager.GetSceneList();
+        _introUIManager = FindObjectOfType<IntroUIManager>();
 
         _sceneInfo = GameObject.FindObjectOfType<SceneInfo>();
 
@@ -30,11 +33,12 @@ public class LoadScene : MonoBehaviour
         if(TryGetSceneFromReferenceImage(_referenceImage, out scene)) {
             Debug.Log("Found Name: " + scene.marker.name);
             Debug.Log("Corresponding worldMapLink: " + scene.worldMapLink);
+            _introUIManager.FoundMarker(scene);
+            _sceneInfo.SetScene(scene);
+            
             if (scene.worldMapLink != "")
             {
-                _imageManager.enabled = false;
-                _sceneInfo.SetScene(scene);
-                _sceneInfo.LoadScene(_sceneInfo.GetSceneType());
+
             }
             else
             {
