@@ -133,6 +133,7 @@ public class SelectAssetGesture : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 50f, layerMask)) {
             Debug.Log("Hit");
             AnchorAsset targetAnchor = hit.transform.gameObject.GetComponentInParent<AnchorAsset>();
+            Debug.Log(targetAnchor);
             if (targetAnchor != null) {
                 Debug.Log("Touched anchor asset");
                 if (lastSelected != null) {
