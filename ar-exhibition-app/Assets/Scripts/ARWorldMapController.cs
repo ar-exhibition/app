@@ -38,6 +38,12 @@ public class ARWorldMapController : MonoBehaviour
     [SerializeField]
     ARAnchorManager m_ARAnchorManager;
 
+    SceneInfo _sceneInfo;
+
+    void Start() {
+        _sceneInfo = FindObjectOfType<SceneInfo>();
+    }
+
     public void ResetSession()
     {
         m_ARSession.Reset();
@@ -105,7 +111,7 @@ public class ARWorldMapController : MonoBehaviour
         }
     }
 
-    public async Task<bool> Load()
+    public async Task<bool> Load(string path)
     {
         var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
         if (sessionSubsystem == null)
@@ -160,11 +166,21 @@ public class ARWorldMapController : MonoBehaviour
 
     async Task<bool> SaveAndDisposeWorldMap(ARWorldMap worldMap)
     {
+        string worldMapUUID;
+
+        if (_sceneInfo.scene.worldMapUUID != null && _sceneInfo.scene.worldMapUUID != "") {
+            worldMapUUID = _sceneInfo.scene.worldMapUUID;
+        } else {
+            worldMapUUID = System.Guid.NewGuid().ToString();
+        }
+
+        string path = FileDownloader.FilePath + worldMapUUID;
+
         Log("Serializing ARWorldMap to byte array...");
         var data = worldMap.Serialize(Allocator.Temp);
         Log(string.Format("ARWorldMap has {0} bytes.", data.Length));
 
-        FileStream file = File.Open(path, FileMode.Create);
+        FileStream file = File.Open(path, FileMode.OpenOrCreate);
         var writer = new BinaryWriter(file);
         writer.Write(data.ToArray());
         writer.Close();
@@ -172,11 +188,9 @@ public class ARWorldMapController : MonoBehaviour
         Log(string.Format("ARWorldMap written to {0}", path));
 
         WWWForm form = new WWWForm();
-        form.AddField("SceneID", "24");
-        form.AddField("SceneName", "24");
-        form.AddField("FileUUID", "my_session");
-        form.AddField("MarkerUUID", "my_session");
-        form.AddBinaryData("files[]", data.ToArray(), "my_session");
+        form.AddField("SceneID", _sceneInfo.scene.sceneId);
+        form.AddField("FileUUID", worldMapUUID);
+        form.AddBinaryData("files[]", data.ToArray(), worldMapUUID);
         using (UnityWebRequest req = UnityWebRequest.Post("http://luziffer.ddnss.de:8080/api/scenes", form))
         {   
             req.SendWebRequest();
@@ -191,6 +205,9 @@ public class ARWorldMapController : MonoBehaviour
             {
                 await Task.Delay(100);
             }
+            string result = req.downloadHandler.text;
+            Scene updatedScene = JsonUtility.FromJson<Scene>(result);
+            _sceneInfo.scene = updatedScene;
         }
         data.Dispose();
         return true;
@@ -198,13 +215,6 @@ public class ARWorldMapController : MonoBehaviour
     }
 #endif
 
-    string path
-    {
-        get
-        {
-            return Path.Combine(Application.persistentDataPath, "my_session");
-        }
-    }
 
     bool supported
     {

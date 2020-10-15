@@ -34,7 +34,7 @@ public class LoadScene : MonoBehaviour
             Debug.Log("Found Name: " + scene.marker.name);
             Debug.Log("Corresponding worldMapLink: " + scene.worldMapLink);
             _introUIManager.FoundMarker(scene);
-            _sceneInfo.SetScene(scene);
+            _sceneInfo.scene = scene;
             
             if (scene.worldMapLink != "")
             {

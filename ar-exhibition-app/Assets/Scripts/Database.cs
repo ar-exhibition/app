@@ -160,6 +160,7 @@ public class Scene {
     public int sceneId;
     public string name;
     public string worldMapLink;
+    public string worldMapUUID;
     public Marker marker;
 }
 

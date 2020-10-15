@@ -11,6 +11,8 @@ public class VisitorUIManager : MonoBehaviour
 
     private ARWorldMapController _arWorldMapController;
 
+    private SceneInfo _sceneInfo;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -22,7 +24,15 @@ public class VisitorUIManager : MonoBehaviour
         _arWorldMapController = FindObjectOfType<ARWorldMapController>();
         _root.style.display = DisplayStyle.Flex;
 
-        await _arWorldMapController.Load();
-        _root.style.display = DisplayStyle.None;
+        _sceneInfo = FindObjectOfType<SceneInfo>();
+        if (_sceneInfo != null) {
+            if (_sceneInfo.scene.worldMapLink != null && _sceneInfo.scene.worldMapLink != "") {
+                FileDownloader.DownloadFile(_sceneInfo.scene.worldMapLink, async (path) => {
+                    await _arWorldMapController.Load(_sceneInfo.scene.worldMapLink);
+                    _root.style.display = DisplayStyle.None;
+                });
+            }
+        }
+        
     }
 }
