@@ -286,6 +286,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnchorAsset
       objectReference: {fileID: 0}
+    - target: {fileID: 7931729338285425994, guid: 50c133fd8fa6e408495852ba3d04f7cc,
+        type: 3}
+      propertyPath: LoadDummyObject
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50c133fd8fa6e408495852ba3d04f7cc, type: 3}
 --- !u!1001 &1142051510
