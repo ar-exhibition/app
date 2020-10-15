@@ -51,7 +51,7 @@ public class AnchorAsset : MonoBehaviour
             Debug.LogWarning("No Anchor attached to " + gameObject.name);
             // Load Dummy Asset
             if (LoadDummyObject) {
-                AssetData dummy = new AssetData {link = "https://www.dropbox.com/s/4rz9t48paxuhhoj/Astronaut.glb?dl=1&type=assets&file=Astronaut.glb", assetType = "3d"};
+                AssetData dummy = new AssetData {link = "http://luziffer.ddnss.de:8080/content/assets/e5d4b3d1-dbb4-5d9a-b0cd-adc95c336e35.glb", assetType = "3d"};
                 LoadAsset(dummy);
             }
         }
@@ -82,6 +82,25 @@ public class AnchorAsset : MonoBehaviour
         }
         _asset = asset;
         _animator.SetTrigger("place");
+    }
+
+    public void HandleClick()
+    {
+        switch (_asset.assetType)
+        {
+            case "3d":
+                this.GetComponentInChildren<ModelFetcher>().StartAnimation();
+                break;
+            case "image":
+                // Do nothing for now
+                break;
+            case "video":
+                // Start Video
+                break;
+            default:
+                Debug.Log("Cannot handle asset of type " + _asset.assetType);
+                break;
+        }
     }
 
     public void EnterSelection() {
@@ -120,6 +139,15 @@ public class AnchorAsset : MonoBehaviour
             b.Encapsulate(r.bounds);
         }
         return b;
+    }
+
+
+    public void Delete() {
+        _animator.SetTrigger("delete");
+    }
+
+    public void Destroy() {
+        GameObject.Destroy(gameObject);
     }
 
 

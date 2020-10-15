@@ -16,6 +16,7 @@
             <ui:Button display-tooltip-when-elided="True" name="selectCheckButton" class="checkButton">
                 <ui:VisualElement name="checkButtonBg" class="checkButtonBg" />
             </ui:Button>
+            <ui:Button display-tooltip-when-elided="True" name="deleteButton" class="deleteButton" />
         </ui:VisualElement>
         <ui:VisualElement name="selectedAssetContainer" class="selectedAssetContainer">
             <ui:Label text="Vincent Schnoor" display-tooltip-when-elided="True" name="selectedCreator" class="selectedCreator" />
