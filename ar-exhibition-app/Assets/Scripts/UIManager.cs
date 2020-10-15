@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,12 @@ public class UIManager : MonoBehaviour
     public GameEvent AddButtonClicked;
     public GameEvent CheckButtonClicked;
     public GameEvent CancelButtonClicked;
+    public GameEvent DeleteButtonClicked;
     public GameEvent AssetSelected;
     public GameEvent SaveSceneButtonClicked;
     public GameEvent SelectionCheckButtonClicked;
+    public GameEvent MenuOpened;
+    public GameEvent MenuClosed;
 
     private Database _database;
 
@@ -26,9 +30,11 @@ public class UIManager : MonoBehaviour
     private Button _addButton;
     private Button _checkButton;
     private Button _cancelButton;
+    private Button _deleteButton;
     private Button _selectCheckButton;
     private VisualElement _sideMenuContainer;
     private ListView _assetListView;
+    private ScrollView _assetScrollView;
     private VisualElement _selectedAssetContainer;
     private VisualElement _sceneBar;
     private Button _saveSceneButton;
@@ -40,6 +46,11 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public AssetData SelectedAsset;
 
+    private bool isMouseDown = false;
+    private bool dragging = false;
+    private float dragStart;
+    private float scrollPosition;
+
     // Start is called before the first frame update
     void Awake()
     {   
@@ -49,15 +60,24 @@ public class UIManager : MonoBehaviour
         _addButton = _root.Q<Button>("addButton");
         _checkButton = _root.Q<Button>("checkButton");
         _cancelButton = _root.Q<Button>("cancelButton");
+        _deleteButton = _root.Q<Button>("deleteButton");
         _selectCheckButton = _root.Q<Button>("selectCheckButton");
         _sideMenuContainer = _root.Q<VisualElement>("sideMenuContainer");
         _assetListView = _root.Q<ListView>("assetList");
+        _assetScrollView = _assetListView.Q<ScrollView>(null, "unity-scroll-view");
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
         _sceneBar = _root.Q<VisualElement>("sceneBar");
         _saveSceneButton = _sceneBar.Q<Button>("saveSceneButton");
         _cancelSceneButton = _sceneBar.Q<Button>("cancelSceneButton");
         _loadingOverlay = _root.Q<VisualElement>("loadingOverlay");
         _loadingLabel = _loadingOverlay.Q<Label>("loadingLabel");
+
+        _assetScrollView.RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
+        _assetScrollView.RegisterCallback<MouseUpEvent>(OnMouseUp, TrickleDown.TrickleDown);
+        _assetScrollView.RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
+        _assetScrollView.scrollDecelerationRate = 0;
+        _assetScrollView.showVertical = false;
+        _assetScrollView.verticalScroller.style.display = DisplayStyle.None;
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -69,6 +89,7 @@ public class UIManager : MonoBehaviour
         _addButton.clicked += OnAddButtonClicked;
         _checkButton.clicked += OnCheckButtonClicked;
         _cancelButton.clicked += OnCancelButtonClicked;
+        _deleteButton.clicked += OnDeleteButtonClicked;
         _saveSceneButton.clicked += OnSaveSceneButtonClicked;
         _cancelSceneButton.clicked += OnCancelSceneButtonClicked;
         _selectCheckButton.clicked += OnSelectionCheckButtonClicked;
@@ -77,6 +98,7 @@ public class UIManager : MonoBehaviour
         _addButton.clicked -= OnAddButtonClicked;
         _checkButton.clicked -= OnCheckButtonClicked;
         _cancelButton.clicked -= OnCancelButtonClicked;
+        _deleteButton.clicked -= OnDeleteButtonClicked;
         _saveSceneButton.clicked -= OnSaveSceneButtonClicked;
         _cancelSceneButton.clicked -= OnCancelSceneButtonClicked;
         _selectCheckButton.clicked -= OnSelectionCheckButtonClicked;
@@ -119,6 +141,12 @@ public class UIManager : MonoBehaviour
             SelectionCheckButtonClicked.Raise();
         }
     }
+    
+    void OnDeleteButtonClicked() {
+        if (DeleteButtonClicked != null) {
+            DeleteButtonClicked.Raise();
+        }
+    }
 
     public AnimationCurve easingInOutCurve = new AnimationCurve(
         new Keyframe(0, 0),
@@ -130,12 +158,18 @@ public class UIManager : MonoBehaviour
             SlideInMenu();
         } else {
             SlideOutMenu();
+            if (MenuClosed != null) {
+                MenuClosed.Raise();
+            }
         }
     }
 
     public void SlideInMenu() {
         StartCoroutine(SlideMenuAnimation(0f, 0.4f));
         _root.AddToClassList("menuActive");
+        if (MenuOpened != null) {
+            MenuOpened.Raise();
+        }
     }
     public void SlideOutMenu() {
         _root.RemoveFromClassList("menuActive");
@@ -165,6 +199,7 @@ public class UIManager : MonoBehaviour
 
     public void EnterSelectionMode(AssetData asset) {
         _addButton.style.display = DisplayStyle.None;
+        _deleteButton.style.display = DisplayStyle.Flex;
         _selectCheckButton.style.display = DisplayStyle.Flex;
         _root.AddToClassList("placementActive");
         if (asset != null) {
@@ -176,6 +211,7 @@ public class UIManager : MonoBehaviour
 
     public void ExitSelectionMode() {
         _addButton.style.display = DisplayStyle.Flex;
+        _deleteButton.style.display = DisplayStyle.None;
         _selectCheckButton.style.display = DisplayStyle.None;
         _selectedAssetContainer.style.display = DisplayStyle.None;
         _root.RemoveFromClassList("placementActive");
@@ -202,15 +238,41 @@ public class UIManager : MonoBehaviour
         element.Q<Label>("assetName").text = _assets[index].name;
         element.Q<Label>("assetSubline").text = $"{_assets[index].creator.studies} | {_assets[index].course.name}";
         element.Q<Label>("assetType").text = _assets[index].assetType;
+        VisualElement thumbnailElement = element.Q<VisualElement>("assetThumbnail");
+        AddThumbnailToElement(_assets[index].thumbnail, thumbnailElement);
         element.Q<Button>("assetItemContainer").clicked += () => {
-            SelectedAsset = _assets[index];
-            EnterPlacementMode();
-            if (AssetSelected != null) {
-                AssetSelected.Raise();
+            if (!dragging) {
+                SelectedAsset = _assets[index];
+                EnterPlacementMode();
+                if (AssetSelected != null) {
+                    AssetSelected.Raise();
+                }
             }
         };
 
         element.userData = _assets[index];
+    }
+
+    public void AddThumbnailToElement(string link, VisualElement element) {
+        FileDownloader.DownloadFile(link, false, (path) =>
+        {
+            Texture2D tex;
+            if(TryLoadImage(path, out tex)) {
+                element.style.backgroundImage = tex;
+            }
+        });
+    }
+
+    bool TryLoadImage(string path, out Texture2D texture)
+    {
+        byte[] fileData = File.ReadAllBytes(path);
+        if (fileData.Length > 0) {
+            texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData);
+            return true;
+        }
+        texture = null;
+        return false;
     }
 
     private IEnumerator SlideMenuAnimation(float target, float duration) {
@@ -225,6 +287,35 @@ public class UIManager : MonoBehaviour
             _sideMenuContainer.style.right = Mathf.Lerp(origin, target, curvePercent);
             yield return null;
         }
+    }
+
+    private void OnMouseMove(MouseMoveEvent evt)
+    {
+        if (isMouseDown && !dragging && Mathf.Abs(dragStart - evt.localMousePosition.y - _assetScrollView.scrollOffset.y) > 4)
+        {
+            dragging = true;
+        }
+        if (dragging)
+        {
+            _assetScrollView.scrollOffset = new Vector2(0,dragStart - evt.localMousePosition.y);
+        }
+    }
+    
+    private void OnMouseUp(MouseUpEvent evt)
+    {
+        isMouseDown = false;
+        StartCoroutine(StopDragging());
+    }
+    
+    private void OnMouseDown(MouseDownEvent evt)
+    {
+        isMouseDown = true;
+        dragStart = _assetScrollView.scrollOffset.y + evt.localMousePosition.y;
+    }
+
+    IEnumerator StopDragging() {
+        yield return new WaitForEndOfFrame();
+        dragging = false;
     }
 
 

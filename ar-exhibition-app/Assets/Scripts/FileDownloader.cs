@@ -31,7 +31,7 @@ public static class FileDownloader
         string path = GetFilePath(url);
         if (!skipCache && File.Exists(path))
         {
-            Debug.Log("Found file locally, loading...");
+            Debug.Log("Found file locally, loading..." + path);
             onSuccess(path);
             return;
         }
@@ -40,9 +40,16 @@ public static class FileDownloader
 
     private static string GetFilePath(string url)
     {
-        Uri uri = new Uri(url);
-        string fileName = System.IO.Path.GetFileName(uri.LocalPath);
-        return $"{FileDownloader.FilePath}{fileName}";
+        try {
+            Uri uri = new Uri(url);
+            string fileName = System.IO.Path.GetFileName(uri.LocalPath);
+            if (fileName != null && fileName != "") {
+                return $"{FileDownloader.FilePath}{fileName}";
+            }
+        } catch {};
+
+        Debug.LogWarning("Bad file url: " + url);
+        return $"{FileDownloader.FilePath}temp";
     }
 
 
