@@ -45,8 +45,10 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public AssetData SelectedAsset;
 
+    private bool isMouseDown = false;
     private bool dragging = false;
     private float dragStart;
+    private float scrollPosition;
 
     // Start is called before the first frame update
     void Awake()
@@ -72,6 +74,9 @@ public class UIManager : MonoBehaviour
         _assetScrollView.RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
         _assetScrollView.RegisterCallback<MouseUpEvent>(OnMouseUp, TrickleDown.TrickleDown);
         _assetScrollView.RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
+        _assetScrollView.scrollDecelerationRate = 0;
+        _assetScrollView.showVertical = false;
+        _assetScrollView.verticalScroller.style.display = DisplayStyle.None;
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -80,7 +85,6 @@ public class UIManager : MonoBehaviour
     }
 
     void OnEnable() {
-        Debug.Log(_assetScrollView);
         _addButton.clicked += OnAddButtonClicked;
         _checkButton.clicked += OnCheckButtonClicked;
         _cancelButton.clicked += OnCancelButtonClicked;
@@ -262,28 +266,31 @@ public class UIManager : MonoBehaviour
 
     private void OnMouseMove(MouseMoveEvent evt)
     {
+        if (isMouseDown && !dragging && Mathf.Abs(dragStart - evt.localMousePosition.y - _assetScrollView.scrollOffset.y) > 4)
+        {
+            dragging = true;
+        }
         if (dragging)
         {
-            Debug.Log("scrolling");
-            _assetScrollView.scrollOffset = new Vector2(0, dragStart - evt.localMousePosition.y);
+            _assetScrollView.scrollOffset = new Vector2(0,dragStart - evt.localMousePosition.y);
         }
     }
     
     private void OnMouseUp(MouseUpEvent evt)
     {
-        dragging = false;
-        Debug.Log("on mouse up");
-        if (Mathf.Abs(dragStart - evt.localMousePosition.y) > 5)
-        {
-            Debug.Log("StopImmediatePropagation");
-            evt.StopImmediatePropagation();
-        }
+        isMouseDown = false;
+        StartCoroutine(StopDragging());
     }
     
     private void OnMouseDown(MouseDownEvent evt)
     {
-        dragging = true;
-        dragStart = evt.localMousePosition.y;
+        isMouseDown = true;
+        dragStart = _assetScrollView.scrollOffset.y + evt.localMousePosition.y;
+    }
+
+    IEnumerator StopDragging() {
+        yield return new WaitForEndOfFrame();
+        dragging = false;
     }
 
 
