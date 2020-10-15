@@ -50,7 +50,6 @@ public static class FileDownloader
 
         Debug.LogWarning("Bad file url: " + url);
         return $"{FileDownloader.FilePath}temp";
-        
     }
 
 

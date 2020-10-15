@@ -1,7 +1,20 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="introContainer" class="introContainer">
         <Style src="IntroUI.uss" />
-        <ui:Button text="Enter Exhibition" display-tooltip-when-elided="True" name="startExhibitionButton" class="startExhibitionButton" />
-        <ui:Button text="Create Exhibition" display-tooltip-when-elided="True" name="createExhibitionButton" class="createExhibitionButton" />
+        <ui:Label text="W E L C O M E  T O" display-tooltip-when-elided="True" name="welcomeLabel" class="welcomeLabel" />
+        <ui:VisualElement name="appIcon" class="appIcon" />
+        <ui:Label text="A R   E X H I B I T I O N" display-tooltip-when-elided="True" name="appTitle" class="appTitle" />
+        <ui:Label text="This app lets you decorate an area with assets like 3D models, images and videos. The decoration is saved persistently and can be viewed by anyone else!" display-tooltip-when-elided="True" name="introText" class="introText" />
+        <ui:Label text="Scan a marker to enter an exhibition!" display-tooltip-when-elided="True" name="scanText" class="scanText" />
+    </ui:VisualElement>
+    <ui:VisualElement name="finderContainer" class="finderContainer">
+        <Style src="IntroUI.uss" />
+        <ui:VisualElement name="foundSceneContainer" class="foundSceneContainer">
+            <ui:Label text="F O U N D  E X H I B I T I O N" display-tooltip-when-elided="True" name="foundIntro" class="foundIntro" />
+            <ui:Label text="FTZ Exhibition" display-tooltip-when-elided="True" name="foundScene" class="foundScene" />
+            <ui:Button text="Enter Exhibition" display-tooltip-when-elided="True" name="enterExhibition" class="enterExhibition" />
+            <ui:Button text="Edit Exhibition" display-tooltip-when-elided="True" name="editExhibition" class="editExhibition" />
+        </ui:VisualElement>
+        <ui:VisualElement name="finderImage" class="finderImage" />
     </ui:VisualElement>
 </ui:UXML>
