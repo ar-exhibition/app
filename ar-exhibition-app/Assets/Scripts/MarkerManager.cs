@@ -14,11 +14,16 @@ public class MarkerManager : MonoBehaviour
     private List<Scene> _scenes = new List<Scene>();
 
     private ARTrackedImageManager _arTrackedImageManager;
+    private RuntimeReferenceImageLibrary runtimeLibrary;
+    private MutableRuntimeReferenceImageLibrary mutableLibrary;
 
     private void Awake()
     {
         _database = GameObject.FindObjectOfType<Database>();
         _arTrackedImageManager = GameObject.FindObjectOfType<ARTrackedImageManager>();
+
+        runtimeLibrary = _arTrackedImageManager.CreateRuntimeLibrary();
+        mutableLibrary = runtimeLibrary as MutableRuntimeReferenceImageLibrary;
 
         _database.GetData((data) =>
         {
@@ -33,7 +38,11 @@ public class MarkerManager : MonoBehaviour
                     StartCoroutine(AddImage(url, newMarker.name));
                 });
             }
+            _arTrackedImageManager.referenceLibrary = mutableLibrary;
+            _arTrackedImageManager.enabled = true;
             Debug.Log(_arTrackedImageManager.referenceLibrary.count);
+            Debug.Log(_arTrackedImageManager.referenceLibrary == mutableLibrary);
+            Debug.Log(_arTrackedImageManager.descriptor.supportsMutableLibrary);
         });
     }
 
@@ -45,10 +54,7 @@ public class MarkerManager : MonoBehaviour
             yield return null;
         }
         Texture2D texture = LoadImage(path);
-        if (_arTrackedImageManager.referenceLibrary is MutableRuntimeReferenceImageLibrary mutableLibrary)
-        {
-            mutableLibrary.ScheduleAddImageJob(texture, name, 1f);
-        }
+        mutableLibrary.ScheduleAddImageJob(texture, name, 1f);
     }
 
     public static bool isFileLocked(FileInfo file)

@@ -41,6 +41,8 @@ public static class FileDownloader
     private static string GetFilePath(string url)
     {
         Uri uri = new Uri(url);
+        Debug.Log(uri);
+        Debug.Log(uri.Query);
 		string query = uri.Query.Substring(1);
         Dictionary<string,string> dicQueryString = 
         query.Split('&')
