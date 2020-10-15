@@ -59,8 +59,10 @@ public class MarkerManager : MonoBehaviour
         {
             FileDownloader.DownloadFile(marker.link, false, (path) =>
             {
-                Texture2D tex = LoadImage(path);
-                AddMarkerToLibrary(tex, marker.name);
+                Texture2D tex;
+                if(TryLoadImage(path, out tex)) {
+                    AddMarkerToLibrary(tex, marker.name);
+                }
             });
         }
     }
@@ -93,13 +95,16 @@ public class MarkerManager : MonoBehaviour
         return false;
     }
 
-    Texture2D LoadImage(string path)
+    bool TryLoadImage(string path, out Texture2D texture)
     {
         byte[] fileData = File.ReadAllBytes(path);
-        Texture2D tex = new Texture2D(2, 2);
-        tex.LoadImage(fileData);
-
-        return tex;
+        if (fileData.Length > 0) {
+            texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData);
+            return true;
+        }
+        texture = null;
+        return false;
     }
 
     public List<Scene> GetSceneList()
