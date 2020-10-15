@@ -18,8 +18,7 @@ public class ModelFetcher : MonoBehaviour
 
     private ProgressIndicator _progressIndicator;
 
-    private Animation anim;
-    private AnimationClip[] animationClips;
+    private GameObject model;
 
     public void Start() {
 
@@ -47,11 +46,11 @@ public class ModelFetcher : MonoBehaviour
 
     void LoadModel(string path)
     {
-        GameObject model = Importer.LoadFromFile(path, new ImportSettings(), out AnimationClip[] animClips);
-        animationClips = animClips;
-        animationClips[0].legacy = true;
+        model = Importer.LoadFromFile(path, new ImportSettings(), out AnimationClip[] animClips);
         Resize(model, GetMaxBounds(model), 1.0f);
-        AddAnimations(model, animClips);
+        if (animClips.Length > 0) {
+            AddAnimations(model, animClips);
+        }
         Vector3 scale = model.transform.localScale;
         model.transform.SetParent(gameObject.transform);
         model.transform.localPosition = Vector3.zero;
@@ -63,29 +62,31 @@ public class ModelFetcher : MonoBehaviour
     {
         if (clips.Length > 0)
         {
-            anim = model.AddComponent<Animation>();
+            clips[0].legacy = true;
+            Animation animation = model.AddComponent<Animation>();
+            animation.AddClip(clips[0], clips[0].name);
+            animation.clip = clips[0];
         }
     }
 
     public void StartAnimation()
     {
-        if (anim != null)
+        if (model.TryGetComponent<Animation>(out Animation animation))
         {
-            if (anim.isPlaying)
+            if (animation.isPlaying) {
                 StopAnimation();
-            else
-            {
-                anim.AddClip(animationClips[0], animationClips[0].name);
-                anim.Play(animationClips[0].name);
+            }
+            else {
+                animation.Play();
             }
         }
     }
 
     private void StopAnimation()
     {
-        if (anim != null)
+        if (model.TryGetComponent<Animation>(out Animation animation))
         {
-            anim.Stop();
+            animation.Stop();
         }
     }
 
