@@ -40,9 +40,17 @@ public static class FileDownloader
 
     private static string GetFilePath(string url)
     {
-        Uri uri = new Uri(url);
-        string fileName = System.IO.Path.GetFileName(uri.LocalPath);
-        return $"{FileDownloader.FilePath}{fileName}";
+        try {
+            Uri uri = new Uri(url);
+            string fileName = System.IO.Path.GetFileName(uri.LocalPath);
+            if (fileName != null && fileName != "") {
+                return $"{FileDownloader.FilePath}{fileName}";
+            }
+        } catch {};
+
+        Debug.LogWarning("Bad file url: " + url);
+        return $"{FileDownloader.FilePath}temp";
+        
     }
 
 

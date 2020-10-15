@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -237,6 +238,8 @@ public class UIManager : MonoBehaviour
         element.Q<Label>("assetName").text = _assets[index].name;
         element.Q<Label>("assetSubline").text = $"{_assets[index].creator.studies} | {_assets[index].course.name}";
         element.Q<Label>("assetType").text = _assets[index].assetType;
+        VisualElement thumbnailElement = element.Q<VisualElement>("assetThumbnail");
+        AddThumbnailToElement(_assets[index].thumbnail, thumbnailElement);
         element.Q<Button>("assetItemContainer").clicked += () => {
             if (!dragging) {
                 SelectedAsset = _assets[index];
@@ -248,6 +251,28 @@ public class UIManager : MonoBehaviour
         };
 
         element.userData = _assets[index];
+    }
+
+    public void AddThumbnailToElement(string link, VisualElement element) {
+        FileDownloader.DownloadFile(link, false, (path) =>
+        {
+            Texture2D tex;
+            if(TryLoadImage(path, out tex)) {
+                element.style.backgroundImage = tex;
+            }
+        });
+    }
+
+    bool TryLoadImage(string path, out Texture2D texture)
+    {
+        byte[] fileData = File.ReadAllBytes(path);
+        if (fileData.Length > 0) {
+            texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData);
+            return true;
+        }
+        texture = null;
+        return false;
     }
 
     private IEnumerator SlideMenuAnimation(float target, float duration) {
