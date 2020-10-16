@@ -27,8 +27,8 @@ public class VisitorUIManager : MonoBehaviour
         _sceneInfo = FindObjectOfType<SceneInfo>();
         if (_sceneInfo != null) {
             if (_sceneInfo.scene.worldMapLink != null && _sceneInfo.scene.worldMapLink != "") {
-                FileDownloader.DownloadFile(_sceneInfo.scene.worldMapLink, async (path) => {
-                    await _arWorldMapController.Load(_sceneInfo.scene.worldMapLink);
+                FileDownloader.DownloadFile(_sceneInfo.scene.worldMapLink, false, async (path) => {
+                    await _arWorldMapController.Load(path);
                     _root.style.display = DisplayStyle.None;
                 });
             }

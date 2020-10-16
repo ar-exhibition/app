@@ -31,7 +31,8 @@ public class AnchorAsset : MonoBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {
+    {   
+        Debug.Log("Anchor Asset started");
         _anchor = GetComponent<ARAnchor>();
         _database = FindObjectOfType<Database>();
         _database.GetData(DatabaseLoaded);
@@ -43,6 +44,10 @@ public class AnchorAsset : MonoBehaviour
         if (_anchor != null) {
             if (_database.TryGetAssetByAnchorId(_anchor.trackableId.ToString(), out asset)) {
                 LoadAsset(asset);
+            } else {
+                Debug.LogWarning("Anchor Id " +_anchor.trackableId.ToString() + " not found in database!");
+                AssetData dummy = new AssetData {link = "http://luziffer.ddnss.de:8080/content/assets/e5d4b3d1-dbb4-5d9a-b0cd-adc95c336e35.glb", assetType = "3d"};
+                LoadAsset(dummy);
             }
             if (_database.TryGetAnchorById(_anchor.trackableId.ToString(), out anchor)) {
                 transform.localScale = Vector3.one *  anchor.scale;

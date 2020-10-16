@@ -13,6 +13,7 @@ public class Database : MonoBehaviour
     private DatabaseData _databaseData;
     private Dictionary<int, AssetData> _assetDict;
     private Dictionary<string, Anchor> _anchorDict;
+    private Dictionary<int, Scene> _sceneDict;
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class Database : MonoBehaviour
             if (_databaseData != null) {
                 _assetDict = CreateAssetDict(_databaseData.assets);
                 _anchorDict = CreateAnchorDict(_databaseData.anchors);
+                _sceneDict = CreateSceneDict(_databaseData.scenes);
             } else {
                 Debug.LogWarning("Cannot load Database");
             }
@@ -62,6 +64,14 @@ public class Database : MonoBehaviour
         anchor = null;
         return false;
     }
+    
+    public bool TryGetSceneById(int sceneId, out Scene scene) {
+        if (_sceneDict.TryGetValue(sceneId, out scene)) {
+            return true;
+        }
+        scene = null;
+        return false;
+    }
 
     private Dictionary<int, AssetData> CreateAssetDict(AssetData[] assets) {
 
@@ -81,6 +91,16 @@ public class Database : MonoBehaviour
             anchorDict.Add(anchor.anchorId, anchor);
         } 
         return anchorDict;
+    }
+    
+    private Dictionary<int, Scene> CreateSceneDict(Scene[] scenes) {
+
+        Dictionary<int, Scene> sceneDict = new Dictionary<int, Scene>();
+
+        foreach (Scene scene in scenes) {
+            sceneDict.Add(scene.sceneId, scene);
+        } 
+        return sceneDict;
     }
 
     private static async Task<string> GetRequest(string url, Action<float> onProgress = null, Action<string> onError = null)
