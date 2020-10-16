@@ -16,7 +16,7 @@ public class AssetClickHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckTouch();
+        //CheckTouch();
         
 #if UNITY_EDITOR
         bool up = false;

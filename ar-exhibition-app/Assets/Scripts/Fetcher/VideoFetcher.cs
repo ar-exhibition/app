@@ -56,6 +56,22 @@ public class VideoFetcher : MonoBehaviour
 
     }
 
+    public void StartVideo()
+    {
+        if (_videoPlayer.isPrepared)
+        {
+            if (_videoPlayer.isPlaying)
+                PauseVideo();
+            else
+                _videoPlayer.Play();
+        }
+    }
+
+    private void PauseVideo()
+    {
+        _videoPlayer.Pause();
+    }
+
     void Resize(GameObject model, float maxDimension = 0.5f)
     {
         MeshRenderer renderer = model.GetComponentInChildren<MeshRenderer>();
