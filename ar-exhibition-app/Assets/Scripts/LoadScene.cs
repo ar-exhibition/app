@@ -34,16 +34,7 @@ public class LoadScene : MonoBehaviour
             Debug.Log("Found Name: " + scene.marker.name);
             Debug.Log("Corresponding worldMapLink: " + scene.worldMapLink);
             _introUIManager.FoundMarker(scene);
-            _sceneInfo.SetScene(scene);
-            
-            if (scene.worldMapLink != "")
-            {
-
-            }
-            else
-            {
-                Debug.Log("No WorldMapLink found");
-            }
+            _sceneInfo.scene = scene;
         };
     }
 

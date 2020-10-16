@@ -5,21 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class SceneInfo : MonoBehaviour
 {
-    private Scene _scene;
+    public Scene scene;
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-    }
-
-    public void SetScene (Scene scene)
-    {
-        _scene = scene;
-    }
-
-    public Scene GetScene()
-    {
-        return _scene;
     }
 
     public void EnterExhibition() {

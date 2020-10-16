@@ -38,6 +38,12 @@ public class ARWorldMapController : MonoBehaviour
     [SerializeField]
     ARAnchorManager m_ARAnchorManager;
 
+    SceneInfo _sceneInfo;
+
+    void Start() {
+        _sceneInfo = FindObjectOfType<SceneInfo>();
+    }
+
     public void ResetSession()
     {
         m_ARSession.Reset();
@@ -105,7 +111,7 @@ public class ARWorldMapController : MonoBehaviour
         }
     }
 
-    public async Task<bool> Load()
+    public async Task<bool> Load(string path)
     {
         var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
         if (sessionSubsystem == null)
@@ -158,29 +164,63 @@ public class ARWorldMapController : MonoBehaviour
         return true;
     }
 
-    void SaveAndDisposeWorldMap(ARWorldMap worldMap)
+    async Task<bool> SaveAndDisposeWorldMap(ARWorldMap worldMap)
     {
+        string worldMapUUID;
+
+        if (_sceneInfo.scene.worldMapUUID != null && _sceneInfo.scene.worldMapUUID != "") {
+            worldMapUUID = _sceneInfo.scene.worldMapUUID;
+        } else {
+            worldMapUUID = System.Guid.NewGuid().ToString() + ".worldmap";
+        }
+
+        Debug.Log("Using this worldmap uuid" + worldMapUUID);
+
+        string path = FileDownloader.FilePath + worldMapUUID;
+        Debug.Log("Using this path: " + path);
+
         Log("Serializing ARWorldMap to byte array...");
         var data = worldMap.Serialize(Allocator.Temp);
         Log(string.Format("ARWorldMap has {0} bytes.", data.Length));
 
-        var file = File.Open(path, FileMode.Create);
+        FileStream file = File.Open(path, FileMode.Create);
         var writer = new BinaryWriter(file);
         writer.Write(data.ToArray());
         writer.Close();
-        data.Dispose();
         worldMap.Dispose();
         Log(string.Format("ARWorldMap written to {0}", path));
+
+        WWWForm form = new WWWForm();
+        form.AddField("SceneID", _sceneInfo.scene.sceneId);
+        form.AddField("FileUUID", worldMapUUID);
+        form.AddBinaryData("files[]", data.ToArray(), worldMapUUID);
+
+        Debug.Log("SceneID: " + _sceneInfo.scene.sceneId);
+        using (UnityWebRequest req = UnityWebRequest.Post("http://luziffer.ddnss.de:8080/api/scenes", form))
+        {   
+            req.SendWebRequest();
+            if (req.isNetworkError || req.isHttpError)
+            {
+                Debug.Log(req.error);
+                data.Dispose();
+                return false;
+            }
+
+            while (!req.isDone)
+            {
+                await Task.Delay(100);
+            }
+            string result = req.downloadHandler.text;
+            Debug.Log("result");
+            Debug.Log(result);
+        }
+        data.Dispose();
+
+        return true;
+
     }
 #endif
 
-    string path
-    {
-        get
-        {
-            return Path.Combine(Application.persistentDataPath, "my_session.worldmap");
-        }
-    }
 
     bool supported
     {

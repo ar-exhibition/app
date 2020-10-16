@@ -41,6 +41,9 @@ public class UIManager : MonoBehaviour
     private Button _cancelSceneButton;
     private VisualElement _loadingOverlay;
     private Label _loadingLabel;
+    private Label _sceneName;
+
+    private SceneInfo _sceneInfo;
 
     private AssetData[] _assets;
     [HideInInspector]
@@ -72,12 +75,17 @@ public class UIManager : MonoBehaviour
         _loadingOverlay = _root.Q<VisualElement>("loadingOverlay");
         _loadingLabel = _loadingOverlay.Q<Label>("loadingLabel");
 
+        _sceneName = _root.Q<Label>("sceneName");
+
         _assetScrollView.RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
         _assetScrollView.RegisterCallback<MouseUpEvent>(OnMouseUp, TrickleDown.TrickleDown);
         _assetScrollView.RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
         _assetScrollView.scrollDecelerationRate = 0;
         _assetScrollView.showVertical = false;
         _assetScrollView.verticalScroller.style.display = DisplayStyle.None;
+
+        _sceneInfo = FindObjectOfType<SceneInfo>();
+        _sceneName.text = _sceneInfo.scene.name;
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");
@@ -122,6 +130,10 @@ public class UIManager : MonoBehaviour
         _loadingLabel.text = "Saving Scene...";
         ARWorldMapController worldMap = FindObjectOfType<ARWorldMapController>();
         await worldMap.Save();
+        _database.GetData(true, (data) => {
+            // update sceneinfo
+            _database.TryGetSceneById(_sceneInfo.scene.sceneId, out _sceneInfo.scene);
+        });
         _loadingOverlay.style.display = DisplayStyle.None;
         SceneManager.LoadScene("IntroScene", LoadSceneMode.Single);
     }
