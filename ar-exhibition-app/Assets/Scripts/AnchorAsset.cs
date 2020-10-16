@@ -100,7 +100,7 @@ public class AnchorAsset : MonoBehaviour
                 // Do nothing for now
                 break;
             case "video":
-                // Start Video
+                this.GetComponentInChildren<VideoFetcher>().StartVideo();
                 break;
             default:
                 Debug.Log("Cannot handle asset of type " + _asset.assetType);
