@@ -8,6 +8,8 @@ public class VisitorUIManager : MonoBehaviour
 
     private UIDocument _UIDocument;
     private VisualElement _root;
+    private VisualElement _loadingOverlay;
+    private Button _backButton;
 
     private ARWorldMapController _arWorldMapController;
 
@@ -18,21 +20,35 @@ public class VisitorUIManager : MonoBehaviour
     {
         _UIDocument = GetComponent<UIDocument>();
         _root = _UIDocument.rootVisualElement;
+        _loadingOverlay = _root.Q<VisualElement>("visitorRoot");
+        _backButton = _root.Q<Button>("backButtonVisitor");
     }
 
     async void Start() {
         _arWorldMapController = FindObjectOfType<ARWorldMapController>();
-        _root.style.display = DisplayStyle.Flex;
+        _loadingOverlay.style.display = DisplayStyle.Flex;
 
         _sceneInfo = FindObjectOfType<SceneInfo>();
         if (_sceneInfo != null) {
             if (_sceneInfo.scene.worldMapLink != null && _sceneInfo.scene.worldMapLink != "") {
                 FileDownloader.DownloadFile(_sceneInfo.scene.worldMapLink, false, async (path) => {
                     await _arWorldMapController.Load(path);
-                    _root.style.display = DisplayStyle.None;
+                    _loadingOverlay.style.display = DisplayStyle.None;
                 });
             }
         }
         
+    }
+
+    void OnEnable() {
+        _backButton.clicked += () => {
+            _sceneInfo.GotToStart();
+        };
+    }
+
+    void OnDisable() {
+        _backButton.clicked -= () => {
+            _sceneInfo.GotToStart();
+        };
     }
 }

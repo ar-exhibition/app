@@ -3,4 +3,7 @@
         <Style src="VisitorUI.uss" />
         <ui:Label text="loading..." display-tooltip-when-elided="True" name="visitorText" class="visitorText" />
     </ui:VisualElement>
+    <ui:Button display-tooltip-when-elided="True" name="backButtonVisitor" class="backButtonVisitor">
+        <Style src="VisitorUI.uss" />
+    </ui:Button>
 </ui:UXML>

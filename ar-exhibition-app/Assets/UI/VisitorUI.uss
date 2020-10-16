@@ -15,5 +15,21 @@
 
 .visitorText {
     font-size: 28px;
+    color: rgb(255, 255, 255);
+}
+
+.backButtonVisitor {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    background-color: rgba(255, 255, 255, 0);
     color: rgba(255, 255, 255, 255);
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    font-size: 24px;
+    background-image: url('/Assets/Sprites/x_button.png');
+    width: 30px;
+    height: 30px;
 }

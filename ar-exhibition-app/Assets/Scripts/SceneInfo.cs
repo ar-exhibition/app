@@ -19,4 +19,8 @@ public class SceneInfo : MonoBehaviour
     public void EditExhibition() {
         SceneManager.LoadScene("CuratorScene");
     }
+
+    public void GotToStart() {
+        SceneManager.LoadScene("IntroScene");
+    }
 }
