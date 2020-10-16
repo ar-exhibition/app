@@ -31,7 +31,7 @@ public class VideoFetcher : MonoBehaviour
     {
         _progressIndicator.gameObject.SetActive(true);
 
-        FileDownloader.DownloadFile(url, SkipCache, (path) => {
+        FileDownloader.DownloadFile(url, true, (path) => {
             _progressIndicator.gameObject.SetActive(false);
             LoadVideo(path);
         }, (progress) => {
