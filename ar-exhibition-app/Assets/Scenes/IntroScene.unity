@@ -152,6 +152,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8ea11646ac664748b03a4940ce390eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scene:
+    sceneId: 0
+    name: 
+    worldMapLink: 
+    worldMapUUID: 
+    marker:
+      name: 
+      link: 
 --- !u!4 &241325021
 Transform:
   m_ObjectHideFlags: 0
@@ -300,8 +308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedLibrary: {fileID: 0}
   m_MaxNumberOfMovingImages: 0
-  m_TrackedImagePrefab: {fileID: 7617203093659972513, guid: 2f2278bb1ef62c949853cd45bf65349a,
-    type: 3}
+  m_TrackedImagePrefab: {fileID: 0}
 --- !u!114 &1602916656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,8 +549,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4966719baa26e4b0e8231a24d9bd491a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FocusMode: 1
-  m_LightEstimationMode: 0
+  m_FocusMode: -1
+  m_LightEstimationMode: -1
   m_AutoFocus: 1
   m_LightEstimation: 0
   m_FacingDirection: 1

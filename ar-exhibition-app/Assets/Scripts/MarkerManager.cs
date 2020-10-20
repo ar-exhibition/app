@@ -10,17 +10,25 @@ public class MarkerManager : MonoBehaviour
 {
 
     private Database _database;
-    private List<Marker> _markers = new List<Marker>();
-    private List<Scene> _scenes = new List<Scene>();
-
+    private Scene[] _scenes;
+    private ARSession _arSession;
     private ARTrackedImageManager _arTrackedImageManager;
     private RuntimeReferenceImageLibrary runtimeLibrary;
     private MutableRuntimeReferenceImageLibrary mutableLibrary;
 
+    private SceneInfo _sceneInfo;
+    private IntroUIManager _introUI;
+
+    private Scene _lastFoundScene;
+
     private void Awake()
     {
+        _arSession = FindObjectOfType<ARSession>();
         _database = GameObject.FindObjectOfType<Database>();
         _arTrackedImageManager = GameObject.FindObjectOfType<ARTrackedImageManager>();
+
+        _sceneInfo = FindObjectOfType<SceneInfo>();
+        _introUI = FindObjectOfType<IntroUIManager>();
 
         runtimeLibrary = _arTrackedImageManager.CreateRuntimeLibrary();
         mutableLibrary = runtimeLibrary as MutableRuntimeReferenceImageLibrary;
@@ -30,73 +38,34 @@ public class MarkerManager : MonoBehaviour
         GetMarkerData();
     }
 
-    private void GetMarkerData()
-    {
-        _database.GetData((data) =>
-        {
-            foreach (Scene scene in data.scenes)
-            {
-                _scenes.Add(scene);
-                Marker newMarker = scene.marker;
-                bool addMarker = true;
-                foreach (Marker marker in _markers)
-                {
-                    if (marker.name.Equals(newMarker.name))
-                    {
-                        addMarker = false;
-                    }
-                }
-                if (addMarker)
-                    _markers.Add(newMarker);
+    void Start() {
+        _arSession.Reset();
+        _lastFoundScene = null;
+    }
+
+    private void GetMarkerData() {
+        _database.GetData((data) => {
+            _scenes = data.scenes;
+            foreach (Scene scene in _scenes) {
+                DownloadMarker(scene.marker);
             }
-            DownloadMarker();
         });  
     }
 
-    private void DownloadMarker()
-    {
-        foreach (Marker marker in _markers)
-        {
-            FileDownloader.DownloadFile(marker.link, false, (path) =>
-            {
-                Texture2D tex;
-                if(TryLoadImage(path, out tex)) {
-                    AddMarkerToLibrary(tex, marker.name);
-                }
-            });
-        }
+    private void DownloadMarker(Marker marker) {
+        FileDownloader.DownloadFile(marker.link, false, (path) => {
+            Texture2D tex;
+            if(TryLoadImage(path, out tex)) {
+                AddMarkerToLibrary(tex, marker.name);
+            }
+        });
     }
 
-    private void AddMarkerToLibrary(Texture2D texture, string name)
-    {
-        Debug.Log("Called");
+    private void AddMarkerToLibrary(Texture2D texture, string name) {
         mutableLibrary.ScheduleAddImageJob(texture, name, 0.1f);
     }
 
-
-    public static bool isFileLocked(FileInfo file)
-    {
-        FileStream stream = null;
-
-        try
-        {
-            stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-        }
-        catch (IOException)
-        {
-            return true;
-        }
-        finally
-        {
-            if (stream != null)
-                stream.Close();
-        }
-
-        return false;
-    }
-
-    bool TryLoadImage(string path, out Texture2D texture)
-    {
+    bool TryLoadImage(string path, out Texture2D texture) {
         byte[] fileData = File.ReadAllBytes(path);
         if (fileData.Length > 0) {
             texture = new Texture2D(2, 2);
@@ -107,8 +76,41 @@ public class MarkerManager : MonoBehaviour
         return false;
     }
 
-    public List<Scene> GetSceneList()
-    {
-        return _scenes;
+    bool TryGetSceneFromReferenceImage (XRReferenceImage referenceImage, out Scene scene) {
+        foreach (Scene _scene in _scenes) {
+            if (referenceImage.name == _scene.marker.name) {
+                scene = _scene;
+                return true;
+            }
+        }
+        scene = null;
+        return false;
     }
+
+    void OnEnable() => _arTrackedImageManager.trackedImagesChanged += OnChanged;
+
+    void OnDisable() => _arTrackedImageManager.trackedImagesChanged -= OnChanged;
+
+    void OnChanged(ARTrackedImagesChangedEventArgs eventArgs)
+    {
+        if (eventArgs.added.Count > 0) {
+            XRReferenceImage newImage = eventArgs.added[0].referenceImage;
+            Scene scene;
+            if(TryGetSceneFromReferenceImage(newImage, out scene)) {
+                SceneDetected(scene);
+            };
+        }
+    }
+
+    void SceneDetected(Scene scene) {
+        if (_lastFoundScene != scene) {
+            Debug.Log("Found Name: " + scene.marker.name);
+            Debug.Log("Corresponding worldMapLink: " + scene.worldMapLink);
+            _lastFoundScene = scene;
+            _introUI.FoundMarker(scene);
+            _sceneInfo.scene = scene;
+            _arSession.Reset();
+        }
+    }
+
 }
