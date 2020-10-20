@@ -46,7 +46,7 @@ public class ModelFetcher : MonoBehaviour
 
     void LoadModel(string path)
     {
-        model = Importer.LoadFromFile(path, new ImportSettings(), out AnimationClip[] animClips);
+        model = Importer.LoadFromFile(path, new ImportSettings(){useLegacyClips = true}, out AnimationClip[] animClips);
         Resize(model, GetMaxBounds(model), 1.0f);
         if (animClips.Length > 0) {
             AddAnimations(model, animClips);
@@ -62,10 +62,10 @@ public class ModelFetcher : MonoBehaviour
     {
         if (clips.Length > 0)
         {
-            clips[0].legacy = true;
             Animation animation = model.AddComponent<Animation>();
+            clips[0].legacy = true;
             animation.AddClip(clips[0], clips[0].name);
-            animation.clip = clips[0];
+            animation.clip = animation.GetClip(clips[0].name);
         }
     }
 

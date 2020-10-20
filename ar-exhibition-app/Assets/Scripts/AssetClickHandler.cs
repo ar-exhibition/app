@@ -16,22 +16,7 @@ public class AssetClickHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //CheckTouch();
-        
-#if UNITY_EDITOR
-        bool up = false;
-        if (Input.GetMouseButtonUp(0) && !up)
-        {
-            up = true;
-            Debug.Log("Click");
-            // Construct a ray from the current touch coordinates
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RayCheck(ray);
-        }
-        if (Input.GetMouseButtonDown(0))
-            up = false;
-#endif
-
+        CheckTouch();
     }
 
     void RayCheck(Ray ray)
@@ -40,32 +25,21 @@ public class AssetClickHandler : MonoBehaviour
         // Create a particle if hit
         if (Physics.Raycast(ray, out hit, 50f, layerMask))
         {
-            Debug.Log("Hit");
             AnchorAsset targetAnchor = hit.transform.gameObject.GetComponentInParent<AnchorAsset>();
-            if (targetAnchor != null)
-            {
+            if (targetAnchor != null) {
                 targetAnchor.HandleClick();
             }
         }
     }
 
-    void CheckTouch()
-    {
+    void CheckTouch() {
         if (Input.touchCount != 0) {
-            if (Input.touchCount == 1)
-                if (Input.GetTouch(0).phase == TouchPhase.Began)
-                {
-                    RaycastHit hit;
+            if (Input.touchCount > 0) {
+                if (Input.GetTouch(0).phase == TouchPhase.Began) {
                     Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-                    if (Physics.Raycast(ray, out hit, 50f, layerMask))
-                    {
-                        AnchorAsset targetAnchor = hit.transform.gameObject.GetComponentInParent<AnchorAsset>();
-                        if (targetAnchor != null)
-                        {
-                            targetAnchor.HandleClick();
-                        }
-                    }
+                    RayCheck(ray);
                 }
+            }     
         }
     }
 }
