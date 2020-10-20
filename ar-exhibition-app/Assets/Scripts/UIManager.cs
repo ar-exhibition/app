@@ -85,7 +85,10 @@ public class UIManager : MonoBehaviour
         _assetScrollView.verticalScroller.style.display = DisplayStyle.None;
 
         _sceneInfo = FindObjectOfType<SceneInfo>();
-        _sceneName.text = _sceneInfo.scene.name;
+        if (_sceneInfo != null) {
+            _sceneName.text = _sceneInfo.scene.name;
+        }
+        
 
         _database.GetData((data) => {
            _assets = Array.FindAll<AssetData>(data.assets, (e) => e.assetType != "light");

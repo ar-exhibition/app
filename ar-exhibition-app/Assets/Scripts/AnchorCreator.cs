@@ -60,8 +60,16 @@ public class AnchorCreator : MonoBehaviour
             Vector2 screenCenter = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
             if (m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneEstimated)) {
                 Pose hitPose = s_Hits[0].pose;
-                var anchor = GameObject.Instantiate(ObjectToPlace, hitPose.position, hitPose.rotation);
-                anchor.GetComponent<AnchorAsset>().LoadAsset(_uiManager.SelectedAsset);
+                ARAnchor anchor = m_AnchorManager.AddAnchor(hitPose);
+                if (anchor == null) {
+                     Debug.Log("Error creating anchor");
+                } else {
+                    GameObject anchorPrefab = GameObject.Instantiate(ObjectToPlace, hitPose.position, hitPose.rotation);
+                    anchorPrefab.GetComponent<AnchorAsset>().LoadAsset(_uiManager.SelectedAsset);
+                    anchorPrefab.GetComponent<AnchorAsset>().SetAnchor(anchor);
+                    m_Anchors.Add(anchor);
+                }
+                
             }
         }
     }

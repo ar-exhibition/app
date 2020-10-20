@@ -77,6 +77,7 @@ public class ARWorldMapController : MonoBehaviour
         SaveAndDisposeWorldMap(worldMap);
         return true;
     }
+#endif
 
     public async Task<bool> SaveAnchors() {
         AnchorAsset[] anchorAssets = FindObjectsOfType<AnchorAsset>();
@@ -85,8 +86,7 @@ public class ARWorldMapController : MonoBehaviour
         for (int i = 0; i < anchorAssets.Length; i++)
         {
             AnchorAsset anchorAsset = anchorAssets[i];
-            ARAnchor anchor = m_ARAnchorManager.AddAnchor(new Pose(anchorAsset.transform.position, anchorAsset.transform.rotation));
-            anchors[i] = new Anchor {assetId = anchorAsset.GetAsset().assetId, anchorId = anchor.trackableId.ToString(), scale = anchorAsset.transform.localScale.x};
+            anchors[i] = new Anchor {assetId = anchorAsset.GetAsset().assetId, anchorId = anchorAsset.GetAnchor().trackableId.ToString(), scale = anchorAsset.transform.localScale.x};
         }
         AnchorPost anchorPost = new AnchorPost {anchors = anchors};
         string jsonPost = JsonUtility.ToJson(anchorPost);
@@ -110,7 +110,7 @@ public class ARWorldMapController : MonoBehaviour
             return true;
         }
     }
-
+#if UNITY_IOS
     public async Task<bool> Load(string path)
     {
         var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
