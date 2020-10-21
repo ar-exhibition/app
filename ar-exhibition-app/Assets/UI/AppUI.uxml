@@ -26,6 +26,10 @@
                 <ui:VisualElement name="leftMenuContent" class="leftMenuContent">
                     <ui:Label text="Scene Title" display-tooltip-when-elided="True" name="sceneTitleHeader" class="sceneTitleHeader" />
                     <ui:TextField picking-mode="Ignore" value="Digital Reality Scene" text="Digital Reality Scene" name="sceneTitleInput" class="sceneTitleInput" />
+                    <ui:Label text="Scene Marker" display-tooltip-when-elided="True" name="sceneMarkerHeader" class="sceneTitleHeader" />
+                    <ui:VisualElement name="sceneMarkerContainer" class="sceneMarkerContainer">
+                        <ui:VisualElement name="sceneMarker" class="sceneMarkerImage sceneMarker" />
+                    </ui:VisualElement>
                     <ui:VisualElement name="sceneButtons" class="sceneButtons">
                         <ui:Button text="Save Scene" display-tooltip-when-elided="True" name="saveSceneButton" class="saveSceneButton" />
                         <ui:Button text="Cancel Scene editing" display-tooltip-when-elided="True" name="cancelSceneButton" class="saveSceneButton cancelSceneButton" />

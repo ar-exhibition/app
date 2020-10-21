@@ -42,6 +42,7 @@ public class UIManager : MonoBehaviour
     private VisualElement _loadingOverlay;
     private Label _loadingLabel;
     private TextField _sceneInput;
+    private VisualElement _sceneMarker;
 
     private Button _menuButton;
 
@@ -78,7 +79,7 @@ public class UIManager : MonoBehaviour
 
         _leftMenuContainer = _root.Q<VisualElement>("leftMenuContainer");
         _menuButton = _root.Q<Button>("openMenuButton");
-
+        _sceneMarker = _root.Q<VisualElement>("sceneMarker");
         _sceneInput = _root.Q<TextField>("sceneTitleInput");
 
         _assetScrollView.RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
@@ -91,6 +92,10 @@ public class UIManager : MonoBehaviour
         _sceneInfo = FindObjectOfType<SceneInfo>();
         if (_sceneInfo != null) {
             _sceneInput.value = _sceneInfo.scene.name;
+            AddThumbnailToElement(_sceneInfo.scene.marker.link, _sceneMarker);
+        } else {
+            // _sceneInput.value = "Debug Scene";
+            // AddThumbnailToElement("http://luziffer.ddnss.de:8080/content/marker/92b7e207-57b8-544b-bf5d-051eedc16bbe.png", _sceneMarker);
         }
         
 

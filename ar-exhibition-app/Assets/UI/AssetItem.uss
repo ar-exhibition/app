@@ -36,6 +36,7 @@
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     margin-right: 20px;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .assetTextContainer {

@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="AssetItem.uss" />
     <ui:VisualElement name="assetItemRoot" class="assetItemRoot">
-        <Style src="AssetItem.uss" />
         <ui:Button display-tooltip-when-elided="True" name="assetItemContainer" class="assetItemContainer">
             <ui:VisualElement name="assetThumbnail" class="assetThumbnail" />
             <ui:VisualElement name="assetTextContainer" class="assetTextContainer">
