@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="SideMenu.uss" />
     <ui:VisualElement name="sideMenuRoot" class="sideMenuRoot">
-        <Style src="SideMenu.uss" />
         <ui:VisualElement name="menuHeaderContainer" class="menuHeaderContainer">
             <ui:Label text="Add Asset" display-tooltip-when-elided="True" name="menuHeaderLabel" class="menuHeaderLabel" style="-unity-font-style: normal;" />
         </ui:VisualElement>

@@ -29,6 +29,7 @@
 
 .sideMenuContent {
     flex-grow: 1;
+    height: auto;
 }
 
 .assetList {

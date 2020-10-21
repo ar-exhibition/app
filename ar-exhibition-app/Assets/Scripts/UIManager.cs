@@ -33,15 +33,17 @@ public class UIManager : MonoBehaviour
     private Button _deleteButton;
     private Button _selectCheckButton;
     private VisualElement _sideMenuContainer;
+    private VisualElement _leftMenuContainer;
     private ListView _assetListView;
     private ScrollView _assetScrollView;
     private VisualElement _selectedAssetContainer;
-    private VisualElement _sceneBar;
     private Button _saveSceneButton;
     private Button _cancelSceneButton;
     private VisualElement _loadingOverlay;
     private Label _loadingLabel;
-    private Label _sceneName;
+    private TextField _sceneInput;
+
+    private Button _menuButton;
 
     private SceneInfo _sceneInfo;
 
@@ -69,13 +71,15 @@ public class UIManager : MonoBehaviour
         _assetListView = _root.Q<ListView>("assetList");
         _assetScrollView = _assetListView.Q<ScrollView>(null, "unity-scroll-view");
         _selectedAssetContainer = _root.Q<VisualElement>("selectedAssetContainer");
-        _sceneBar = _root.Q<VisualElement>("sceneBar");
-        _saveSceneButton = _sceneBar.Q<Button>("saveSceneButton");
-        _cancelSceneButton = _sceneBar.Q<Button>("cancelSceneButton");
+        _saveSceneButton = _root.Q<Button>("saveSceneButton");
+        _cancelSceneButton = _root.Q<Button>("cancelSceneButton");
         _loadingOverlay = _root.Q<VisualElement>("loadingOverlay");
         _loadingLabel = _loadingOverlay.Q<Label>("loadingLabel");
 
-        _sceneName = _root.Q<Label>("sceneName");
+        _leftMenuContainer = _root.Q<VisualElement>("leftMenuContainer");
+        _menuButton = _root.Q<Button>("openMenuButton");
+
+        _sceneInput = _root.Q<TextField>("sceneTitleInput");
 
         _assetScrollView.RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
         _assetScrollView.RegisterCallback<MouseUpEvent>(OnMouseUp, TrickleDown.TrickleDown);
@@ -86,7 +90,7 @@ public class UIManager : MonoBehaviour
 
         _sceneInfo = FindObjectOfType<SceneInfo>();
         if (_sceneInfo != null) {
-            _sceneName.text = _sceneInfo.scene.name;
+            _sceneInput.value = _sceneInfo.scene.name;
         }
         
 
@@ -104,7 +108,9 @@ public class UIManager : MonoBehaviour
         _saveSceneButton.clicked += OnSaveSceneButtonClicked;
         _cancelSceneButton.clicked += OnCancelSceneButtonClicked;
         _selectCheckButton.clicked += OnSelectionCheckButtonClicked;
+        _menuButton.clicked += OnMenuButtonClicked;
     }
+    
     void OnDisable() {
         _addButton.clicked -= OnAddButtonClicked;
         _checkButton.clicked -= OnCheckButtonClicked;
@@ -163,6 +169,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    void OnMenuButtonClicked() {
+        ToggleLeftMenu();
+    }
+
     public AnimationCurve easingInOutCurve = new AnimationCurve(
         new Keyframe(0, 0),
         new Keyframe(1, 1)
@@ -178,6 +188,14 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+    
+    public void ToggleLeftMenu() {
+        if (_leftMenuContainer.resolvedStyle.left < 0f) {
+            SlideInLeftMenu();
+        } else {
+            SlideOutLeftMenu();
+        }
+    }
 
     public void SlideInMenu() {
         StartCoroutine(SlideMenuAnimation(0f, 0.4f));
@@ -189,6 +207,15 @@ public class UIManager : MonoBehaviour
     public void SlideOutMenu() {
         _root.RemoveFromClassList("menuActive");
         StartCoroutine(SlideMenuAnimation(-550f, 0.4f));
+    }
+    
+    public void SlideInLeftMenu() {
+        StartCoroutine(SlideLeftMenuAnimation(0f, 0.4f));
+        _root.AddToClassList("leftMenuActive");
+    }
+    public void SlideOutLeftMenu() {
+        _root.RemoveFromClassList("leftMenuActive");
+        StartCoroutine(SlideLeftMenuAnimation(-550f, 0.4f));
     }
 
     public void EnterPlacementMode() {
@@ -300,6 +327,20 @@ public class UIManager : MonoBehaviour
             float curvePercent = easingInOutCurve.Evaluate(percent);
 
             _sideMenuContainer.style.right = Mathf.Lerp(origin, target, curvePercent);
+            yield return null;
+        }
+    }
+    
+    private IEnumerator SlideLeftMenuAnimation(float target, float duration) {
+        float journey = 0f;
+        float origin = _leftMenuContainer.resolvedStyle.left;
+        while (journey <= duration) {
+            journey = journey + Time.deltaTime;
+            
+            float percent = Mathf.Clamp01(journey / duration);
+            float curvePercent = easingInOutCurve.Evaluate(percent);
+
+            _leftMenuContainer.style.left = Mathf.Lerp(origin, target, curvePercent);
             yield return null;
         }
     }

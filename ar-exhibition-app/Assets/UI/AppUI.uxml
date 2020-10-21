@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:Template name="SideMenu" src="SideMenu.uxml" />
+    <Style src="AppUI.uss" />
     <ui:VisualElement name="root" class="root">
-        <Style src="Default.uss" />
         <ui:VisualElement name="sideMenuContainer" class="sideMenuContainer">
-            <ui:Instance template="SideMenu" name="SideMenu" class="sideMenu" />
+            <ui:Instance template="SideMenu" name="SideMenu" class="SideMenu" />
         </ui:VisualElement>
         <ui:VisualElement name="rightCol" class="rightCol">
             <ui:Button display-tooltip-when-elided="True" name="cancelButton" class="cancelButton" />
@@ -18,16 +18,27 @@
             </ui:Button>
             <ui:Button display-tooltip-when-elided="True" name="deleteButton" class="deleteButton" />
         </ui:VisualElement>
+        <ui:VisualElement name="leftMenuContainer" class="leftMenuContainer">
+            <ui:VisualElement name="leftMenu" class="leftMenu" style="border-left-color: rgb(204, 204, 204); border-right-color: rgb(204, 204, 204); border-top-color: rgb(204, 204, 204); border-bottom-color: rgb(204, 204, 204);">
+                <ui:VisualElement name="leftMenuHeader" class="leftMenuHeader">
+                    <ui:Label text="Scene Menu" display-tooltip-when-elided="True" name="leftMenuHeaderLabel" class="leftMenuHeaderLabel" />
+                </ui:VisualElement>
+                <ui:VisualElement name="leftMenuContent" class="leftMenuContent">
+                    <ui:Label text="Scene Title" display-tooltip-when-elided="True" name="sceneTitleHeader" class="sceneTitleHeader" />
+                    <ui:TextField picking-mode="Ignore" value="Digital Reality Scene" text="Digital Reality Scene" name="sceneTitleInput" class="sceneTitleInput" />
+                    <ui:VisualElement name="sceneButtons" class="sceneButtons">
+                        <ui:Button text="Save Scene" display-tooltip-when-elided="True" name="saveSceneButton" class="saveSceneButton" />
+                        <ui:Button text="Cancel Scene editing" display-tooltip-when-elided="True" name="cancelSceneButton" class="saveSceneButton cancelSceneButton" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="leftCol" class="leftCol">
+            <ui:Button display-tooltip-when-elided="True" name="openMenuButton" class="openMenuButton" />
+        </ui:VisualElement>
         <ui:VisualElement name="selectedAssetContainer" class="selectedAssetContainer">
             <ui:Label text="Vincent Schnoor" display-tooltip-when-elided="True" name="selectedCreator" class="selectedCreator" />
             <ui:Label text="Hogwarts Express" display-tooltip-when-elided="True" name="selectedName" class="selectedName" />
-        </ui:VisualElement>
-        <ui:VisualElement name="sceneBar" class="sceneBar">
-            <ui:Label text="My Scene" display-tooltip-when-elided="True" name="sceneName" class="sceneName" />
-            <ui:VisualElement name="sceneBarButtonContainer" class="sceneBarButtonContainer">
-                <ui:Button text="Finish" display-tooltip-when-elided="True" name="saveSceneButton" class="saveSceneButton" />
-                <ui:Button text="Cancel" display-tooltip-when-elided="True" name="cancelSceneButton" class="saveSceneButton cancelSceneButton" />
-            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="loadingOverlay" class="loadingOverlay">
             <ui:Label text="loading.." display-tooltip-when-elided="True" name="loadingLabel" class="loadingLabel" />
