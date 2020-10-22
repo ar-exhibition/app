@@ -51,7 +51,7 @@ public class AnchorAsset : MonoBehaviour
             } else {
                 Debug.LogWarning("Anchor Id " +_anchor.trackableId.ToString() + " not found in database!");
                 if (LoadDummyObject) {
-                    AssetData dummy = new AssetData {link = "http://luziffer.ddnss.de:8080/content/assets/e5d4b3d1-dbb4-5d9a-b0cd-adc95c336e35.glb", assetType = "3d"};
+                    AssetData dummy = new AssetData {link = "http://luziffer.ddnss.de:8080/content/assets/1442c92f-c04c-5491-b3df-8bdb166e4057.mp4", assetType = "video"};
                     LoadAsset(dummy);
                 }
             }
@@ -62,7 +62,7 @@ public class AnchorAsset : MonoBehaviour
             Debug.LogWarning("No Anchor attached to " + gameObject.name);
             // Load Dummy Asset
             if (LoadDummyObject) {
-                AssetData dummy = new AssetData {link = "http://luziffer.ddnss.de:8080/content/assets/e5d4b3d1-dbb4-5d9a-b0cd-adc95c336e35.glb", assetType = "3d"};
+                AssetData dummy = new AssetData {link = "http://luziffer.ddnss.de:8080/content/assets/243f344e-e828-59c9-8a8c-d88f427273f8.png", assetType = "image"};
                 LoadAsset(dummy);
             }
         }
@@ -76,16 +76,25 @@ public class AnchorAsset : MonoBehaviour
                 _gameObject = GameObject.Instantiate(ModelFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
                 _gameObject.transform.localRotation = Quaternion.identity;
+                _gameObject.GetComponent<ModelFetcher>().OnLoaded += () => {
+                    _animator.SetTrigger("place");
+                };
                 break;
             case "image":
                 ImageFetcher.GetComponent<ImageFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(ImageFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
+                _gameObject.GetComponent<ImageFetcher>().OnLoaded += () => {
+                    _animator.SetTrigger("place");
+                };
                 break;
             case "video":
                 VideoFetcher.GetComponent<VideoFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(VideoFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
+                _gameObject.GetComponent<VideoFetcher>().OnLoaded += () => {
+                    _animator.SetTrigger("place");
+                };
                 break;
             default:
                 Debug.Log("Cannot handle asset of type " + asset.assetType);

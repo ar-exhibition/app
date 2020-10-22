@@ -12,6 +12,8 @@ public class ModelFetcher : MonoBehaviour
     
     public string Url;
 
+    public Action OnLoaded;
+
     [Header("Debug")]
     public bool SkipCache = false;
     public bool LoadOnStart = true;
@@ -56,6 +58,9 @@ public class ModelFetcher : MonoBehaviour
         model.transform.localPosition = Vector3.zero;
         model.transform.localRotation = Quaternion.identity;
         model.transform.localScale = scale;
+        if (OnLoaded != null) {
+            OnLoaded.Invoke();
+        }
     }
 
     void AddAnimations(GameObject model, AnimationClip[] clips)

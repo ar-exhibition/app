@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ using UnityEngine.Video;
 public class VideoFetcher : MonoBehaviour
 {
     public string Url;
+
+    public Action OnLoaded;
 
     [Header("Debug")]
     public bool SkipCache = false;
@@ -31,7 +34,7 @@ public class VideoFetcher : MonoBehaviour
     {
         _progressIndicator.gameObject.SetActive(true);
 
-        FileDownloader.DownloadFile(url, true, (path) => {
+        FileDownloader.DownloadFile(url, SkipCache, (path) => {
             _progressIndicator.gameObject.SetActive(false);
             LoadVideo(path);
         }, (progress) => {
@@ -49,7 +52,9 @@ public class VideoFetcher : MonoBehaviour
 
             float widthScaleFactor = videoPlayer.texture.width / (float) videoPlayer.texture.height; 
             videoPlayer.transform.localScale = new Vector3(widthScaleFactor, 1.0f, 0.01f);
-            Resize(videoPlayer.gameObject);
+            if (OnLoaded != null) {
+                OnLoaded.Invoke();
+            }
             videoPlayer.Play();
         };
         _videoPlayer.Prepare();
@@ -70,15 +75,5 @@ public class VideoFetcher : MonoBehaviour
     private void PauseVideo()
     {
         _videoPlayer.Pause();
-    }
-
-    void Resize(GameObject model, float maxDimension = 0.5f)
-    {
-        MeshRenderer renderer = model.GetComponentInChildren<MeshRenderer>();
-        if (renderer != null) {
-            float max = Mathf.Max(Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y), renderer.bounds.size.z);
-            float scalingFactor = max / maxDimension;
-            model.transform.parent.localScale /= scalingFactor;    
-        }   
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class ImageFetcher : MonoBehaviour
 {
     public string Url;
     public GameObject[] ImageHolders;
+
+    public Action OnLoaded;
 
     [Header("Debug")]
     public bool SkipCache = false;
@@ -52,17 +55,8 @@ public class ImageFetcher : MonoBehaviour
             imageHolder.GetComponent<Renderer>().material.SetTexture("_MainTex", tex);
             imageHolder.SetActive(true);
         }
-        Resize(ImageHolders[0]);
-
-    }
-
-    void Resize(GameObject model, float maxDimension = 0.5f)
-    {
-        MeshRenderer renderer = model.GetComponentInChildren<MeshRenderer>();
-        if (renderer != null) {
-            float max = Mathf.Max(Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y), renderer.bounds.size.z);
-            float scalingFactor = max / maxDimension;
-            model.transform.parent.localScale /= scalingFactor;    
-        }   
+        if (OnLoaded != null) {
+            OnLoaded.Invoke();
+        }
     }
 }
