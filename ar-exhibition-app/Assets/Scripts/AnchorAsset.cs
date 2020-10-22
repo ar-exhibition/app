@@ -84,6 +84,7 @@ public class AnchorAsset : MonoBehaviour
                 ImageFetcher.GetComponent<ImageFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(ImageFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
+                _gameObject.transform.localRotation = Quaternion.identity;
                 _gameObject.GetComponent<ImageFetcher>().OnLoaded += () => {
                     _animator.SetTrigger("place");
                 };
@@ -92,6 +93,7 @@ public class AnchorAsset : MonoBehaviour
                 VideoFetcher.GetComponent<VideoFetcher>().Url = asset.link;
                 _gameObject = GameObject.Instantiate(VideoFetcher, Vector3.zero, Quaternion.identity, Placeholder.transform);
                 _gameObject.transform.localPosition = Vector3.zero;
+                _gameObject.transform.localRotation = Quaternion.identity;
                 _gameObject.GetComponent<VideoFetcher>().OnLoaded += () => {
                     _animator.SetTrigger("place");
                 };
