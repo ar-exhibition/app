@@ -40,8 +40,31 @@ public class ARWorldMapController : MonoBehaviour
 
     SceneInfo _sceneInfo;
 
+    private ARWorldMappingStatus mappingStatus;
+    public GameEvent MappingIsSufficient;
+    public GameEvent MappingIsNotSufficient;
+
     void Start() {
         _sceneInfo = FindObjectOfType<SceneInfo>();
+    }
+
+    void Update() {
+        #if UNITY_IOS
+            var sessionSubsystem = (ARKitSessionSubsystem) m_ARSession.subsystem;
+            if (mappingStatus != sessionSubsystem.worldMappingStatus) {
+                mappingStatus = sessionSubsystem.worldMappingStatus;
+                if (mappingStatus == ARWorldMappingStatus.Mapped) {
+                    if (MappingIsSufficient != null) {
+                        MappingIsSufficient.Raise();
+                    }
+                } else {
+                    if (MappingIsNotSufficient != null) {
+                        MappingIsNotSufficient.Raise();
+                    }
+                }
+            }
+        #endif
+        
     }
 
     public void ResetSession()

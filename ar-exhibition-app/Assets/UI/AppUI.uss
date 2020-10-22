@@ -27,7 +27,7 @@
 
 .root {
     flex-grow: 1;
-    flex-direction: row-reverse;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     border-top-left-radius: 100%;
@@ -35,6 +35,8 @@
     border-top-right-radius: 100%;
     border-bottom-right-radius: 100%;
     font-size: 64px;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .sideMenuContainer {
@@ -50,13 +52,16 @@
 .rightCol {
     flex-grow: 0;
     width: 100px;
-    right: auto;
+    right: 0;
     flex-wrap: nowrap;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-left: 20px;
     padding-right: 20px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
 }
 
 .addButton {
@@ -104,6 +109,10 @@
 }
 
 .menuActive #openMenuButton {
+    display: none;
+}
+
+.menuActive .mappingStatusContainer, .leftMenuActive .mappingStatusContainer {
     display: none;
 }
 
@@ -389,4 +398,24 @@
     padding-right: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
+}
+
+.mappingStatusContainer {
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.mappingStatus {
+    margin-right: 20px;
+    width: 30px;
+    height: 30px;
+}
+
+.mappingStatusText {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 255);
+    -unity-text-align: upper-left;
 }

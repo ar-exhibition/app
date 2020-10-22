@@ -43,6 +43,7 @@ public class UIManager : MonoBehaviour
     private Label _loadingLabel;
     private TextField _sceneInput;
     private VisualElement _sceneMarker;
+    private VisualElement _mappingStatusContainer;
 
     private Button _menuButton;
 
@@ -76,6 +77,7 @@ public class UIManager : MonoBehaviour
         _cancelSceneButton = _root.Q<Button>("cancelSceneButton");
         _loadingOverlay = _root.Q<VisualElement>("loadingOverlay");
         _loadingLabel = _loadingOverlay.Q<Label>("loadingLabel");
+        _mappingStatusContainer = _root.Q<VisualElement>("mappingStatusContainer");
 
         _leftMenuContainer = _root.Q<VisualElement>("leftMenuContainer");
         _menuButton = _root.Q<Button>("openMenuButton");
@@ -184,7 +186,7 @@ public class UIManager : MonoBehaviour
     );
 
     public void ToggleMenu() {
-        if (_sideMenuContainer.resolvedStyle.right < 0f) {
+        if (_sideMenuContainer.resolvedStyle.right != 0f) {
             SlideInMenu();
         } else {
             SlideOutMenu();
@@ -203,7 +205,8 @@ public class UIManager : MonoBehaviour
     }
 
     public void SlideInMenu() {
-        StartCoroutine(SlideMenuAnimation(0f, 0.4f));
+        Debug.Log("slide in Menu");
+        StartCoroutine(SlideMenuAnimation(-550f, 0f, 0.4f));
         _root.AddToClassList("menuActive");
         if (MenuOpened != null) {
             MenuOpened.Raise();
@@ -211,7 +214,7 @@ public class UIManager : MonoBehaviour
     }
     public void SlideOutMenu() {
         _root.RemoveFromClassList("menuActive");
-        StartCoroutine(SlideMenuAnimation(-550f, 0.4f));
+        StartCoroutine(SlideMenuAnimation(0f, -550f, 0.4f));
     }
     
     public void SlideInLeftMenu() {
@@ -310,6 +313,10 @@ public class UIManager : MonoBehaviour
         });
     }
 
+    public void SetTrackingStatus(bool isSufficient) {
+        _mappingStatusContainer.style.display = isSufficient ? DisplayStyle.None : DisplayStyle.Flex;
+    }
+
     bool TryLoadImage(string path, out Texture2D texture)
     {
         byte[] fileData = File.ReadAllBytes(path);
@@ -322,9 +329,8 @@ public class UIManager : MonoBehaviour
         return false;
     }
 
-    private IEnumerator SlideMenuAnimation(float target, float duration) {
+    private IEnumerator SlideMenuAnimation(float origin, float target, float duration) {
         float journey = 0f;
-        float origin = _sideMenuContainer.resolvedStyle.right;
         while (journey <= duration) {
             journey = journey + Time.deltaTime;
             

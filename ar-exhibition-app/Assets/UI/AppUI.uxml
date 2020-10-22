@@ -2,7 +2,7 @@
     <ui:Template name="SideMenu" src="SideMenu.uxml" />
     <Style src="AppUI.uss" />
     <ui:VisualElement name="root" class="root">
-        <ui:VisualElement name="sideMenuContainer" class="sideMenuContainer">
+        <ui:VisualElement name="sideMenuContainer" class="sideMenuContainer" style="right: -550px;">
             <ui:Instance template="SideMenu" name="SideMenu" class="SideMenu" />
         </ui:VisualElement>
         <ui:VisualElement name="rightCol" class="rightCol">
@@ -43,6 +43,10 @@
         <ui:VisualElement name="selectedAssetContainer" class="selectedAssetContainer">
             <ui:Label text="Vincent Schnoor" display-tooltip-when-elided="True" name="selectedCreator" class="selectedCreator" />
             <ui:Label text="Hogwarts Express" display-tooltip-when-elided="True" name="selectedName" class="selectedName" />
+        </ui:VisualElement>
+        <ui:VisualElement name="mappingStatusContainer" class="mappingStatusContainer">
+            <ui:VisualElement name="mappingStatus" class="mappingStatus" style="border-top-left-radius: 100%; border-bottom-left-radius: 100%; border-top-right-radius: 100%; border-bottom-right-radius: 100%; background-color: rgba(241, 35, 35, 255);" />
+            <ui:Label text="Tracking is not sufficient. Move around to improve tracking!" display-tooltip-when-elided="True" name="mappingStatusText" class="mappingStatusText" />
         </ui:VisualElement>
         <ui:VisualElement name="loadingOverlay" class="loadingOverlay">
             <ui:Label text="loading.." display-tooltip-when-elided="True" name="loadingLabel" class="loadingLabel" />
