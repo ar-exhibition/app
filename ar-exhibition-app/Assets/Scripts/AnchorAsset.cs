@@ -123,7 +123,9 @@ public class AnchorAsset : MonoBehaviour
         _animator.SetBool("selected", false);
         PlacementIndicator.SetActive(false);
         if (_anchor != null) {
+            _anchor.destroyOnRemoval = false;
             _anchorManager.RemoveAnchor(_anchor);
+            _anchorManager.anchorPrefab = null;
             _anchor = _anchorManager.AddAnchor(new Pose(transform.position, transform.rotation));
         }
     }
@@ -165,7 +167,12 @@ public class AnchorAsset : MonoBehaviour
     }
 
     public void Destroy() {
-        GameObject.Destroy(gameObject);
+        if (_anchor != null) {
+            _anchor.destroyOnRemoval = true;
+            _anchorManager.RemoveAnchor(_anchor);
+        } else {
+            GameObject.Destroy(gameObject);
+        }
     }
 
 

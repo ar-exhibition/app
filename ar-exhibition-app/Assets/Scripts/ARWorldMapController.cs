@@ -97,7 +97,7 @@ public class ARWorldMapController : MonoBehaviour
         var worldMap = request.GetWorldMap();
         request.Dispose();
 
-        SaveAndDisposeWorldMap(worldMap);
+        await SaveAndDisposeWorldMap(worldMap);
         return true;
     }
 #endif
@@ -105,13 +105,19 @@ public class ARWorldMapController : MonoBehaviour
     public async Task<bool> SaveAnchors() {
         AnchorAsset[] anchorAssets = FindObjectsOfType<AnchorAsset>();
         Debug.Log("Found " + anchorAssets.Length + " anchors");
-        Anchor[] anchors = new Anchor[anchorAssets.Length];
+        List<Anchor> anchors = new List<Anchor>();
         for (int i = 0; i < anchorAssets.Length; i++)
         {
             AnchorAsset anchorAsset = anchorAssets[i];
-            anchors[i] = new Anchor {assetId = anchorAsset.GetAsset().assetId, anchorId = anchorAsset.GetAnchor().trackableId.ToString(), scale = anchorAsset.transform.localScale.x};
+            if (anchorAsset != null && anchorAsset.GetAnchor() != null) {
+                try {
+                    anchors.Add(new Anchor {assetId = anchorAsset.GetAsset().assetId, anchorId = anchorAsset.GetAnchor().trackableId.ToString(), scale = anchorAsset.transform.localScale.x});
+                } catch(System.Exception) {
+                    Debug.Log("ERROR IN ANCHOR SAVE");
+                }
+            }
         }
-        AnchorPost anchorPost = new AnchorPost {anchors = anchors};
+        AnchorPost anchorPost = new AnchorPost {anchors = anchors.ToArray()};
         string jsonPost = JsonUtility.ToJson(anchorPost);
         Debug.Log(jsonPost);
         using (UnityWebRequest req = new UnityWebRequest("http://luziffer.ddnss.de:8080/api/anchors", "POST"))
@@ -166,7 +172,7 @@ public class ARWorldMapController : MonoBehaviour
 
         var data = new NativeArray<byte>(allBytes.Count, Allocator.Temp);
         data.CopyFrom(allBytes.ToArray());
-
+        file.Dispose();
         Log(string.Format("Deserializing to ARWorldMap...", path));
         ARWorldMap worldMap;
         if (ARWorldMap.TryDeserialize(data, out worldMap))

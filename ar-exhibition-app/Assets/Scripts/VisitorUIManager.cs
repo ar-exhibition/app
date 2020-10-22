@@ -26,11 +26,12 @@ public class VisitorUIManager : MonoBehaviour
 
     async void Start() {
         _arWorldMapController = FindObjectOfType<ARWorldMapController>();
-        _loadingOverlay.style.display = DisplayStyle.Flex;
 
         _sceneInfo = FindObjectOfType<SceneInfo>();
         if (_sceneInfo != null) {
             if (_sceneInfo.scene.worldMapLink != null && _sceneInfo.scene.worldMapLink != "") {
+                _loadingOverlay.style.display = DisplayStyle.Flex;
+                _arWorldMapController.ResetSession();
                 FileDownloader.DownloadFile(_sceneInfo.scene.worldMapLink, false, async (path) => {
                     await _arWorldMapController.Load(path);
                     _loadingOverlay.style.display = DisplayStyle.None;

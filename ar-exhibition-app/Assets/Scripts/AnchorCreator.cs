@@ -60,6 +60,7 @@ public class AnchorCreator : MonoBehaviour
             Vector2 screenCenter = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5f));
             if (m_RaycastManager.Raycast(screenCenter, s_Hits, TrackableType.PlaneEstimated)) {
                 Pose hitPose = s_Hits[0].pose;
+                m_AnchorManager.anchorPrefab = null;
                 ARAnchor anchor = m_AnchorManager.AddAnchor(hitPose);
                 if (anchor == null) {
                      Debug.Log("Error creating anchor");

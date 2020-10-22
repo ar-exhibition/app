@@ -6,6 +6,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 public class UIManager : MonoBehaviour
 {
@@ -58,6 +60,9 @@ public class UIManager : MonoBehaviour
     private float dragStart;
     private float scrollPosition;
 
+    private ARWorldMapController _arWorldMapController;
+    private ARAnchorManager _arAnchorManager;
+
     // Start is called before the first frame update
     void Awake()
     {   
@@ -91,10 +96,22 @@ public class UIManager : MonoBehaviour
         _assetScrollView.showVertical = false;
         _assetScrollView.verticalScroller.style.display = DisplayStyle.None;
 
+        _arWorldMapController = FindObjectOfType<ARWorldMapController>();
+        _arAnchorManager = FindObjectOfType<ARAnchorManager>();
+
         _sceneInfo = FindObjectOfType<SceneInfo>();
         if (_sceneInfo != null) {
             _sceneInput.value = _sceneInfo.scene.name;
             AddThumbnailToElement(_sceneInfo.scene.marker.link, _sceneMarker);
+            if (_sceneInfo.scene.worldMapLink != null) {
+                _loadingOverlay.style.display = DisplayStyle.Flex;
+                _loadingLabel.text = "Loading Scene...";
+                _arWorldMapController.ResetSession();
+                FileDownloader.DownloadFile(_sceneInfo.scene.worldMapLink, false, async (path) => {
+                    await _arWorldMapController.Load(path);
+                    _loadingOverlay.style.display = DisplayStyle.None;
+                });
+            }
         } else {
             // _sceneInput.value = "Debug Scene";
             // AddThumbnailToElement("http://luziffer.ddnss.de:8080/content/marker/92b7e207-57b8-544b-bf5d-051eedc16bbe.png", _sceneMarker);

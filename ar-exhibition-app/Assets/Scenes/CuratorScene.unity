@@ -1517,7 +1517,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 0}
+  m_AnchorPrefab: {fileID: 1425031600425799432, guid: 50c133fd8fa6e408495852ba3d04f7cc,
+    type: 3}
 --- !u!114 &888480548
 MonoBehaviour:
   m_ObjectHideFlags: 0
