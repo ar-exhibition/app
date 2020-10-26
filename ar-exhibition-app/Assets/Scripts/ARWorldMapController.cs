@@ -120,7 +120,7 @@ public class ARWorldMapController : MonoBehaviour
         AnchorPost anchorPost = new AnchorPost {anchors = anchors.ToArray()};
         string jsonPost = JsonUtility.ToJson(anchorPost);
         Debug.Log(jsonPost);
-        using (UnityWebRequest req = new UnityWebRequest("http://luziffer.ddnss.de:8080/api/anchors", "POST"))
+        using (UnityWebRequest req = new UnityWebRequest($"{Configuration.SERVER_URL}/api/anchors", "POST"))
         {   
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPost);
             req.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);
@@ -225,7 +225,7 @@ public class ARWorldMapController : MonoBehaviour
         form.AddBinaryData("files[]", data.ToArray(), worldMapUUID);
 
         Debug.Log("SceneID: " + _sceneInfo.scene.sceneId);
-        using (UnityWebRequest req = UnityWebRequest.Post("http://luziffer.ddnss.de:8080/api/scenes", form))
+        using (UnityWebRequest req = UnityWebRequest.Post($"{Configuration.SERVER_URL}/api/scenes", form))
         {   
             req.SendWebRequest();
             if (req.isNetworkError || req.isHttpError)

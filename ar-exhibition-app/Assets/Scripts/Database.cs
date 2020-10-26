@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 public class Database : MonoBehaviour
 {
-    public string ContentRequestUrl;
+    private string ContentRequestUrl = $"{Configuration.SERVER_URL}/api/content";
 
     private DatabaseData _databaseData;
     private Dictionary<int, AssetData> _assetDict;
