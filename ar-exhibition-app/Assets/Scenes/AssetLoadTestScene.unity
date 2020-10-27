@@ -286,6 +286,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnchorAsset
       objectReference: {fileID: 0}
+    - target: {fileID: 1425031600425799432, guid: 50c133fd8fa6e408495852ba3d04f7cc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7931729338285425994, guid: 50c133fd8fa6e408495852ba3d04f7cc,
         type: 3}
       propertyPath: LoadDummyObject
@@ -358,7 +363,12 @@ PrefabInstance:
     - target: {fileID: 9078913824957898867, guid: b69d2290973e24566bb89b3d5016a2c9,
         type: 3}
       propertyPath: Url
-      value: /4rz9t48paxuhhoj/Astronaut.glb?dl=1xuhhoj/Astronaut.glb?dl=1
+      value: https://www.dropbox.com/s/4rz9t48paxuhhoj/Astronaut.glb?dl=1&ext=.gl
+      objectReference: {fileID: 0}
+    - target: {fileID: 9078913824957898867, guid: b69d2290973e24566bb89b3d5016a2c9,
+        type: 3}
+      propertyPath: SkipCache
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9078913824957898869, guid: b69d2290973e24566bb89b3d5016a2c9,
         type: 3}
@@ -368,7 +378,7 @@ PrefabInstance:
     - target: {fileID: 9078913824957898869, guid: b69d2290973e24566bb89b3d5016a2c9,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b69d2290973e24566bb89b3d5016a2c9, type: 3}

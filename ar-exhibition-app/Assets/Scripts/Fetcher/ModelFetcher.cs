@@ -21,14 +21,22 @@ public class ModelFetcher : MonoBehaviour
     private ProgressIndicator _progressIndicator;
 
     private GameObject model;
+    private Action<GameObject, AnimationClip[]> onImportFinished;
+    private Action<float> onImportProgress;
 
     public void Start() {
 
         _progressIndicator = GetComponentInChildren<ProgressIndicator>();
         _progressIndicator.gameObject.SetActive(false);
+
         if (LoadOnStart) {
             DownloadFile(Url);
         }
+    }
+
+    void OnEnable() {
+        onImportFinished += importFinished;
+        onImportProgress += importProgress;
     }
 
 
@@ -48,7 +56,26 @@ public class ModelFetcher : MonoBehaviour
 
     void LoadModel(string path)
     {
-        model = Importer.LoadFromFile(path, new ImportSettings(){useLegacyClips = true}, out AnimationClip[] animClips);
+        _progressIndicator.gameObject.SetActive(true);
+        try
+        {
+            Importer.LoadFromFileAsync(path, new ImportSettings(){useLegacyClips = true}, onImportFinished, onImportProgress);
+        }
+        catch (System.Exception)
+        {
+            _progressIndicator.gameObject.SetActive(false);
+            Debug.LogError("Cannot load model");
+        }
+        
+    }
+
+    void importProgress(float progress) {
+        _progressIndicator.progress = progress;
+    }
+
+    void importFinished(GameObject importedModel, AnimationClip[] animClips) {
+        _progressIndicator.gameObject.SetActive(false);
+        model = importedModel;
         Resize(model, GetMaxBounds(model), 1.0f);
         if (animClips.Length > 0) {
             AddAnimations(model, animClips);

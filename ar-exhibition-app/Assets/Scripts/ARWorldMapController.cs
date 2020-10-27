@@ -39,8 +39,9 @@ public class ARWorldMapController : MonoBehaviour
     ARAnchorManager m_ARAnchorManager;
 
     SceneInfo _sceneInfo;
-
+    #if UNITY_IOS
     private ARWorldMappingStatus mappingStatus;
+    #endif
     public GameEvent MappingIsSufficient;
     public GameEvent MappingIsNotSufficient;
 
@@ -72,9 +73,9 @@ public class ARWorldMapController : MonoBehaviour
         m_ARSession.Reset();
     }
 
-#if UNITY_IOS
     public async Task<bool> Save()
     {
+#if UNITY_IOS
         var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
         if (sessionSubsystem == null)
         {
@@ -98,10 +99,9 @@ public class ARWorldMapController : MonoBehaviour
         request.Dispose();
 
         await SaveAndDisposeWorldMap(worldMap);
+#endif
         return true;
     }
-#endif
-
     public async Task<bool> SaveAnchors() {
         AnchorAsset[] anchorAssets = FindObjectsOfType<AnchorAsset>();
         Debug.Log("Found " + anchorAssets.Length + " anchors");
@@ -139,9 +139,11 @@ public class ARWorldMapController : MonoBehaviour
             return true;
         }
     }
-#if UNITY_IOS
+
     public async Task<bool> Load(string path)
     {
+        #if UNITY_IOS
+
         var sessionSubsystem = (ARKitSessionSubsystem)m_ARSession.subsystem;
         if (sessionSubsystem == null)
         {
@@ -190,9 +192,13 @@ public class ARWorldMapController : MonoBehaviour
 
         Log("Apply ARWorldMap to current session.");
         sessionSubsystem.ApplyWorldMap(worldMap);
+        
+        #endif
         return true;
+
     }
 
+#if UNITY_IOS
     async Task<bool> SaveAndDisposeWorldMap(ARWorldMap worldMap)
     {
         string worldMapUUID;
